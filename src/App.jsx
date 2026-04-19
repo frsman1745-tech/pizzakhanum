@@ -1,5 +1,5 @@
 // pages/index.js
-import { useState, useRef, useEffect } from “react”;
+import { useState, useRef, useEffect } from "react";
 
 /* ═══════════════════════════ DATA ═══════════════════════════════ */
 const FEATURED = [
