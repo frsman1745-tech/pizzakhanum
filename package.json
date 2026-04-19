@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "node src/scripts/seed.cjs"
   },
+
   "dependencies": {
     "dotenv": "^17.4.2",
     "mongodb": "^7.1.1",
