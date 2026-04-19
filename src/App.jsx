@@ -1,5 +1,6 @@
 // pages/index.js
 import { useState, useRef, useEffect } from "react";
+code.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
 
 /* ═══════════════════════════ DATA ═══════════════════════════════ */
 const FEATURED = [
