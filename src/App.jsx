@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 /* ═══════════════════════════ DATA ═══════════════════════════════ */
 const FEATURED = [
 {
-id: “meter”, label: “بيتزا المتر”,
+id: “meter”, label: "بيتزا المتر",
 priceOld: “150,000”, priceNew: “1,500”, numericPrice: 150000,
 sliceCount: 6, cols: 6,                       // ← 6 قطع، صف واحد
 desc: “متر كامل من الشهية المتنوعة لتشاركه مع أحبّك”,
@@ -982,3 +982,4 @@ if (screen === “summary”) return (
 
 return null;
 }
+
