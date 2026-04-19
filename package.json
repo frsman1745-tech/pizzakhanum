@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postinstall": "node src/scripts/seed.cjs",
+    "postinstall": "node src/scripts/seed.cjs"
   },
 
   "dependencies": {
