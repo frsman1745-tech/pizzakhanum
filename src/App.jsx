@@ -293,15 +293,35 @@ function FeaturedSlider({featured,onCardClick}){
 
 /* ══════════════════════════════════════════════════ */
 export default function PizzaKhanum(){
-  const[featured,setFeatured]=useState(()=>ls("admin_featured",DEFAULT_FEATURED));
-  const[pizzasMenu,setPizzasMenu]=useState(()=>ls("admin_menu",DEFAULT_MENU));
-
-  useEffect(()=>{
-    function sync(){setFeatured(ls("admin_featured",DEFAULT_FEATURED));setPizzasMenu(ls("admin_menu",DEFAULT_MENU));}
-    window.addEventListener("focus",sync);
-    return()=>window.removeEventListener("focus",sync);
-  },[]);
-
+  // الكود الجديد: يبدأ ببيانات فارغة ثم يحدّثها من السيرفر
+  const [featured, setFeatured] = useState([]);
+  const [pizzasMenu, setPizzasMenu] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+useEffect(() => {
+    async function loadData() {
+      try {
+        // جلب المنيو من السيرفر
+        const res = await fetch('/api/pizzas'); 
+        if (res.ok) {
+          const data = await res.json();
+          setPizzasMenu(data.length > 0 ? data : DEFAULT_MENU);
+        }
+        // جلب العروض المميزة من السيرفر
+        const featRes = await fetch('/api/featured');
+        if (featRes.ok) {
+          const featData = await featRes.json();
+          setFeatured(featData.length > 0 ? featData : DEFAULT_FEATURED);
+        }
+      } catch (err) {
+        console.error("فشل جلب البيانات:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+  
   const[screen,setScreen]=useState("landing");
   const[builderPizza,setBuilderPizza]=useState(null);
   const[khanamSize,setKhanamSize]=useState(null);
@@ -354,7 +374,7 @@ export default function PizzaKhanum(){
     if(Object.keys(errs).length){setErrors(errs);return;}
     const wapp=ls("site_whatsapp","963998950904");
     const lines=cart.map(i=>`• ${i.label}${i.size?` (${i.size})`:""} × ${i.qty}\n  ${i.details}\n  السعر: ${i.priceOld} ل.س`).join("\n\n");
-    const msg=["مرحباً بيتزا خانم 🍕","","📋 الطلب:",lines,"",`💰 المجموع: ${fmt(cartTotal)} ل.س`,`🚗 ${deliveryType==="pickup"?"استلام من الفرع":"توصيل"}`,deliveryType==="delivery"?`📍 ${locationTxt}${mapCoords?`\n🗺 https://maps.google.com/?q=${mapCoords.lat},${mapCoords.lng}`:""}`:""," ",`📞 ${phone}`].filter(Boolean).join("\n");
+    const msg=["مرحباً بيتزا خانم 🍕","","📋 الطلب:",lines,"",`💰 المجموع: ${fmt(cartTotal)} ل.س`,`🚗 ${deliveryType==="pickup"?"استلام من الفرع":"توصيل"}`,deliveryType==="delivery"?`📍 ${locationTxt}${mapCoords?`\n🗺 https://www.google.com/maps?q=${mapCoords.lat},${mapCoords.lng}`:""}`:""," ",`📞 ${phone}`].filter(Boolean).join("\n");
     window.open(`https://wa.me/${wapp}?text=${encodeURIComponent(msg)}`,"_blank");
   }
 
@@ -391,7 +411,11 @@ export default function PizzaKhanum(){
       </div>
     );
   }
-
+if (loading) return (
+    <div dir="rtl" style={{fontFamily:"'Noto Kufi Arabic',sans-serif", background:"#0f0f0f", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", color:"#C8A96A"}}>
+       جاري تحضير قائمة البيتزا... 🍕
+    </div>
+  );
   /* ════════ LANDING ════════ */
   if(screen==="landing")return(
     <div dir="rtl" style={{fontFamily:"'Noto Kufi Arabic',sans-serif"}}>
