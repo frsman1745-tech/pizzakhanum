@@ -148,36 +148,62 @@ useEffect(() => {
     setEditing({type,id});
   }
 
- async function saveEdit() {
+async function saveEdit() {
   const saved = { ...form };
-  // ... (نفس الكود الخاص بالصور والأحجام)
+  
+  // معالجة المقاسات لو وجدت
+  if (saved._sizes) {
+    saved.sizes = saved._sizes;
+    delete saved._sizes;
+  }
+
+  // تحديد نوع العنصر (menu أو featured)
+  saved.type = editing.type;
 
   try {
-    // إرسال التعديل إلى قاعدة البيانات عبر الـ API
-    const response = await fetch(`/api/pizzas/${saved.id}`, {
-      method: 'PUT',
+    // تحديد هل هي عملية تعديل (PUT) أم إضافة جديدة (POST)
+    // ملاحظة: إذا كان الـ ID عبارة عن timestamp طويل، فهو جديد
+    const isNew = !menu.find(m => m.id === saved.id) && !featured.find(f => f.id === saved.id);
+    
+    const url = isNew ? '/api/pizzas' : `/api/pizzas/${saved.id}`;
+    const method = isNew ? 'POST' : 'PUT';
+
+    const response = await fetch(url, {
+      method: method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(saved),
     });
 
     if (response.ok) {
-      toast("✓ تم الحفظ في قاعدة البيانات");
+      toast_("✅ تم الحفظ في قاعدة البيانات");
       setEditing(null);
-      // هنا نقوم بتحديث الصفحة لجلب البيانات الجديدة
-      window.location.reload(); 
+      setTick(t => t + 1); // لتحديث القائمة تلقائياً
+    } else {
+      throw new Error();
     }
   } catch (error) {
-    console.error("خطأ في الحفظ:", error);
-    toast("❌ فشل الحفظ");
+    toast_("❌ فشل الاتصال بالسيرفر", "err");
   }
 }
-  function toggleCS(id){
-    const u=menu.map(it=>it.id===id?{...it,comingSoon:!it.comingSoon}:it);
-    setMenu(u);lsSet("admin_menu",u);
-    const it=u.find(x=>x.id===id);
-    log(`تغيير حالة: ${it.label}`);
-    toast_(it.comingSoon?"⏳ أُخفي":"✅ ظهر",it.comingSoon?"warn":"ok");
+async function toggleCS(id) {
+  const item = menu.find(it => it.id === id);
+  const newStatus = !item.comingSoon;
+  
+  try {
+    const res = await fetch(`/api/pizzas/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...item, comingSoon: newStatus })
+    });
+    
+    if (res.ok) {
+      setTick(t => t + 1);
+      toast_(newStatus ? "⏳ أُخفي" : "✅ ظهر");
+    }
+  } catch (err) {
+    toast_("❌ فشل التحديث", "err");
   }
+}
 
   function addItem(){
     const id=Date.now().toString();
@@ -199,16 +225,23 @@ useEffect(() => {
   }
 
   /* ✅ الحذف باستخدام id ومع custom confirm بدل window.confirm */
-  function deleteItem(type,id){
-    const list=type==="menu"?menu:featured;
-    const item=list.find(x=>x.id===id);if(!item)return;
-    confirm_(`تحذف "${item.label}"؟`,()=>{
-      if(type==="menu"){const u=menu.filter(x=>x.id!==id);setMenu(u);lsSet("admin_menu",u);}
-      else{const u=featured.filter(x=>x.id!==id);setFeatured(u);lsSet("admin_featured",u);}
-      setImg(id,"pizza",null);setImg(id,"flavor",null);
-      log(`حذف: ${item.label}`);toast_("🗑 تم الحذف","warn");
-    });
-  }
+function deleteItem(type, id) {
+  const list = type === "menu" ? menu : featured;
+  const item = list.find(x => x.id === id);
+  if (!item) return;
+
+  confirm_(`تحذف "${item.label}" نهائياً؟`, async () => {
+    try {
+      const res = await fetch(`/api/pizzas/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setTick(t => t + 1);
+        toast_("🗑 تم الحذف من السيرفر", "warn");
+      }
+    } catch (err) {
+      toast_("❌ فشل الحذف", "err");
+    }
+  });
+}
 
   function move(type,id,dir){
     const arr=type==="menu"?[...menu]:[...featured];
