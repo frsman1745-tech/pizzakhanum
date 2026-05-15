@@ -1,5 +1,4 @@
-import { useState, useRef } from "react";
-
+import { useState, useRef, useEffect } from "react";
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "pizza2024";
 
 /* ══════ IMAGE KEYS ══════
@@ -96,8 +95,27 @@ export default function AdminPage(){
   const[authed,setAuthed]=useState(false);
   const[pass,setPass]=useState("");
   const[authErr,setAuthErr]=useState("");
-  const[menu,setMenu]=useState(()=>lsGet("admin_menu",DEFAULT_MENU));
-  const[featured,setFeatured]=useState(()=>lsGet("admin_featured",DEFAULT_FEATURED));
+const [menu, setMenu] = useState([]);
+const [featured, setFeatured] = useState([]);
+const [loading, setLoading] = useState(true);
+
+// دالة لجلب البيانات من قاعدة البيانات فور فتح الصفحة
+useEffect(() => {
+  async function fetchData() {
+    try {
+      const res = await fetch('/api/pizzas');
+      const data = await res.json();
+      // فصل البيانات: العناصر المميزة عن القائمة العادية
+      setFeatured(data.filter(item => item.type === "featured"));
+      setMenu(data.filter(item => item.type === "menu" || !item.type));
+    } catch (err) {
+      toast_("❌ فشل جلب البيانات من السيرفر", "err");
+    } finally {
+      setLoading(false);
+    }
+  }
+  fetchData();
+}, [tick]); // سيقوم بالتحديث عند تغيير قيمة tick
   const[tab,setTab]=useState("menu");
   const[search,setSearch]=useState("");
   const[editing,setEditing]=useState(null);
