@@ -135,8 +135,23 @@ useEffect(() => {
   function toast_(m,t="ok"){setToast({m,t});setTimeout(()=>setToast(null),2700);}
   function confirm_(msg,onOk){setConfirmDlg({msg,onOk});}
   function log(a){const e={a,t:new Date().toLocaleString("ar-EG")};const u=[e,...history].slice(0,40);setHistory(u);lsSet("admin_history",u);}
-  function readFile(file,cb){if(!file)return;const r=new FileReader();r.onload=ev=>cb(ev.target.result);r.readAsDataURL(file);}
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "YOUR_PRESET_NAME"); // ضع اسم الـ Preset الخاص بك هنا
 
+  try {
+    const res = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+    return data.secure_url; // هذا هو الرابط الذي سنخزنه في قاعدة البيانات
+  } catch (err) {
+    console.error("Cloudinary Error:", err);
+    return null;
+  }
+}
   function login(e){e.preventDefault();if(pass===ADMIN_PASSWORD){setAuthed(true);setAuthErr("");}else setAuthErr("كلمة المرور غلط");}
 
   function openEdit(type,id){
@@ -150,6 +165,9 @@ useEffect(() => {
 
 async function saveEdit() {
   const saved = { ...form };
+
+   saved.imgP = imgP; // رابط صورة البيتزا من Cloudinary
+  saved.imgF = imgF; // رابط صورة النكهة من Cloudinary
   
   // معالجة المقاسات لو وجدت
   if (saved._sizes) {
@@ -341,8 +359,22 @@ function deleteItem(type, id) {
               <div className="ov"><span style={{fontSize:"1.3rem"}}>📷</span><span style={{fontSize:".66rem",color:"#ddd",marginTop:3}}>تغيير</span></div>
               {!imgP&&<><span style={{fontSize:"1.6rem",opacity:.2}}>🖼</span><span style={{fontSize:".7rem",color:"#2a2a2a",marginTop:5}}>اضغط لرفع صورة</span></>}
             </div>
-            <input ref={pRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>readFile(e.target.files[0],setImgP)}/>
-            {imgP&&<button className="delbtn" onClick={()=>setImgP(null)}>× حذف</button>}
+<input ref={pRef} type="file" accept="image/*" style={{display:"none"}} 
+  onChange={async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      toast_("⏳ جاري رفع الصورة...");
+      const url = await uploadToCloudinary(file);
+      if (url) {
+        setImgP(url); // هنا حفظنا الرابط السحابي بدل الكود الطويل
+        toast_("✅ تم الرفع بنجاح");
+      } else {
+        toast_("❌ فشل الرفع", "err");
+      }
+    }
+  }} 
+/>
+             {imgP&&<button className="delbtn" onClick={()=>setImgP(null)}>× حذف</button>}
           </div>
 
           {/* صورة النكهة — للقائمة فقط */}
@@ -354,7 +386,17 @@ function deleteItem(type, id) {
                 <div className="ov"><span style={{fontSize:"1.3rem"}}>🎨</span><span style={{fontSize:".66rem",color:"#ddd",marginTop:3}}>تغيير</span></div>
                 {!imgF&&<><span style={{fontSize:"1.6rem",opacity:.2}}>🎨</span><span style={{fontSize:".7rem",color:"#2a2a2a",marginTop:5}}>صورة النكهة</span></>}
               </div>
-              <input ref={fRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>readFile(e.target.files[0],setImgF)}/>
+              <input ref={fRef} type="file" accept="image/*" style={{display:"none"}} onChange={async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    toast_("⏳ جاري رفع صورة النكهة...");
+    const url = await uploadToCloudinary(file);
+    if (url) {
+      setImgF(url); 
+      toast_("✅ تم الرفع");
+    }
+  }
+}}/>
               {imgF&&<button className="delbtn" onClick={()=>setImgF(null)}>× حذف</button>}
             </div>
           )}
