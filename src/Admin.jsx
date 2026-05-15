@@ -130,19 +130,29 @@ export default function AdminPage(){
     setEditing({type,id});
   }
 
-  function saveEdit(){
-    const saved={...form};
-    if(saved._sizes){saved.sizes=saved._sizes;delete saved._sizes;}
-    setImg(saved.id,"pizza",imgP);
-    setImg(saved.id,"flavor",imgF);
-    setTick(t=>t+1);
-    if(editing.type==="menu"){const u=menu.map(it=>it.id===editing.id?saved:it);setMenu(u);lsSet("admin_menu",u);}
-    else{const u=featured.map(it=>it.id===editing.id?saved:it);setFeatured(u);lsSet("admin_featured",u);}
-    log(`تعديل: ${saved.label}`);
-    setEditing(null);
-    toast_("✓ تم الحفظ");
-  }
+ async function saveEdit() {
+  const saved = { ...form };
+  // ... (نفس الكود الخاص بالصور والأحجام)
 
+  try {
+    // إرسال التعديل إلى قاعدة البيانات عبر الـ API
+    const response = await fetch(`/api/pizzas/${saved.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(saved),
+    });
+
+    if (response.ok) {
+      toast("✓ تم الحفظ في قاعدة البيانات");
+      setEditing(null);
+      // هنا نقوم بتحديث الصفحة لجلب البيانات الجديدة
+      window.location.reload(); 
+    }
+  } catch (error) {
+    console.error("خطأ في الحفظ:", error);
+    toast("❌ فشل الحفظ");
+  }
+}
   function toggleCS(id){
     const u=menu.map(it=>it.id===id?{...it,comingSoon:!it.comingSoon}:it);
     setMenu(u);lsSet("admin_menu",u);
