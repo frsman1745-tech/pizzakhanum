@@ -407,7 +407,7 @@ export default function PizzaKhanum() {
 
   function FlavorGrid({onPick, usedMap={}}) {
     return (
-      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(1,1fr)",gap:6}}>
         {flavors.map(f => {
           const cnt = usedMap[f.id]||0;
           return (
