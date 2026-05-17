@@ -1,57 +1,104 @@
-// src/lib/models/Pizza.js
-import mongoose from "mongoose";
+// api/pizzas.js — Vercel Serverless Function
+// GET  /api/pizzas          ← جلب كل البيتزا (أو حسب category)
+// POST /api/pizzas          ← إضافة بيتزا جديدة
 
-// ── حجم واحد (صغير / وسط / كبير) ──────────────────────────────────────────
-const SizeSchema = new mongoose.Schema(
-  {
-    id:           { type: String, required: true },   // "sm" | "md" | "lg"
-    label:        { type: String, required: true },   // "صغير"
-    priceOld:     { type: String, default: "" },      // "35,000"
-    priceNew:     { type: String, default: "" },      // "350"
-    numericPrice: { type: Number, default: 0 },       // 35000
-  },
-  { _id: false }
-);
+import { connectDB } from "../src/lib/mongodb.js";
+import Pizza from "../src/lib/models/Pizza.js";
 
-// ── الموديل الرئيسي ─────────────────────────────────────────────────────────
-const PizzaSchema = new mongoose.Schema(
-  {
-    // معلومات أساسية
-    name:        { type: String, required: true, trim: true },
-    category:    { type: String, enum: ["menu", "featured"], default: "menu" },
-    details:     { type: String, default: "" },  // المكونات (للقائمة)
-    desc:        { type: String, default: "" },  // وصف قصير (للمميزة)
+/* ── تحويل MongoDB → الواجهة الأمامية ─────────────────────────────────────── */
+function toFrontend(doc) {
+  const o = doc.toObject ? doc.toObject() : { ...doc };
+  return {
+    // الحقول الأساسية
+    id:             String(o._id),
+    label:          o.name,
+    type:           o.category,
+    details:        o.details        || "",
+    desc:           o.desc           || "",
+    comingSoon:     o.comingSoon      || false,
+    isActive:       o.isActive        !== false,
+    sortOrder:      o.sortOrder       || 0,
 
-    // الحالة
-    comingSoon:  { type: Boolean, default: false },
-    isActive:    { type: Boolean, default: true },
+    // الصور
+    imageUrl:       o.imageUrl        || "",
+    flavorImageUrl: o.flavorImageUrl  || "",
 
-    // الصور — روابط Cloudinary
-    imageUrl:       { type: String, default: "" }, // صورة الكارد
-    flavorImageUrl: { type: String, default: "" }, // صورة داخل اختيار النكهات
+    // الأسعار الثابتة (للمميزة)
+    priceOld:       o.fixedPriceOld   || "",
+    priceNew:       o.fixedPriceNew   || "",
+    numericPrice:   o.fixedNumericPrice || 0,
 
-    // الأسعار الثابتة (للمميزة — مثل المتر وبيتزا 60×40)
-    fixedPriceOld:     { type: String, default: "" },   // "150,000"
-    fixedPriceNew:     { type: String, default: "" },   // "1,500"
-    fixedNumericPrice: { type: Number, default: 0 },    // 150000
+    // الأحجام
+    sizes:          o.khanamSizes?.length ? o.khanamSizes : (o.sizes || []),
 
-    // الأحجام (للقائمة العادية)
-    sizes:       { type: [SizeSchema], default: [] },
+    // خاص بالـ Builder
+    sliceCount:     o.sliceCount      || 0,
+    cols:           o.cols            || 0,
+  };
+}
 
-    // خاص ببيتزا المتر وبيتزا 60×40 (builder)
-    sliceCount:  { type: Number, default: 0 },
-    cols:        { type: Number, default: 0 },
+/* ── تحويل الواجهة الأمامية → MongoDB ─────────────────────────────────────── */
+function toBackend(body) {
+  return {
+    name:              body.label            || body.name         || "بيتزا جديدة",
+    category:          body.type             || body.category     || "menu",
+    details:           body.details          || "",
+    desc:              body.desc             || "",
+    comingSoon:        body.comingSoon        ?? false,
+    isActive:          body.isActive          ?? true,
+    imageUrl:          body.imageUrl          || "",
+    flavorImageUrl:    body.flavorImageUrl    || "",
+    fixedPriceOld:     body.priceOld          || "",
+    fixedPriceNew:     body.priceNew          || "",
+    fixedNumericPrice: Number(String(body.numericPrice || 0).replace(/,/g, "")) || 0,
+    sizes:             body.sizes             || [],
+    khanamSizes:       body.khanamSizes       || [],
+    sliceCount:        body.sliceCount        || 0,
+    cols:              body.cols              || 0,
+    sortOrder:         body.sortOrder         || 0,
+  };
+}
 
-    // خاص ببيتزا خانم فقط
-    khanamSizes: { type: [SizeSchema], default: [] },
+export default async function handler(req, res) {
+  // ── CORS ──
+  res.setHeader("Access-Control-Allow-Origin",  "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(200).end();
 
-    // الترتيب في الواجهة
-    sortOrder:   { type: Number, default: 0 },
-  },
-  {
-    timestamps: true,
-    collection: "pizzas",
+  // ── اتصال DB ──
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error("[DB Connect]", err.message);
+    return res.status(500).json({ success: false, error: "فشل الاتصال بقاعدة البيانات" });
   }
-);
 
-export default mongoose.models.Pizza || mongoose.model("Pizza", PizzaSchema);
+  // ── GET /api/pizzas ──
+  if (req.method === "GET") {
+    try {
+      const filter = {};
+      if (req.query.category) filter.category = req.query.category;
+
+      const pizzas = await Pizza.find(filter).sort({ sortOrder: 1, createdAt: -1 });
+      return res.status(200).json({ success: true, data: pizzas.map(toFrontend) });
+    } catch (err) {
+      console.error("[GET /api/pizzas]", err.message);
+      return res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  // ── POST /api/pizzas ──
+  if (req.method === "POST") {
+    try {
+      const pizza = await Pizza.create(toBackend(req.body));
+      return res.status(201).json({ success: true, data: toFrontend(pizza) });
+    } catch (err) {
+      console.error("[POST /api/pizzas]", err.message);
+      return res.status(400).json({ success: false, error: err.message });
+    }
+  }
+
+  res.setHeader("Allow", ["GET", "POST"]);
+  return res.status(405).json({ success: false, error: `Method ${req.method} غير مدعوم` });
+}
