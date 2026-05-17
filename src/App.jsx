@@ -412,7 +412,7 @@ function FlavorGrid({onPick, usedMap={}}) {
         gridTemplateColumns: "repeat(6, 1fr)", // جعلها 6 أعمدة بالضبط
         gridAutoFlow: "column",                // إجبار العناصر على البقاء في سطر واحد ممتد أفقياً
         gridAutoColumns: "calc(16.66% - 7px)", // حساب مساحة كل عنصر ليتسع السطر لـ 6 أعمدة تماماً
-        gap: 8,
+        gap: 6,
         overflowX: "auto",                      // تفعيل التمرير الأفقي السلس
         paddingBottom: 10                       // مساحة بسيطة أسفل السطر لمنع تداخل سكرول الموبايل
       }}>
