@@ -7,7 +7,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 
 /* ══ بيانات افتراضية (تُستخدم لو قاعدة البيانات فارغة) ══════════════════════ */
 const DEFAULT_FEATURED = [
-  { id:"meter",      label:"بيتزا المتر",  priceOld:"150,000", priceNew:"1,500", numericPrice:150000, sliceCount:8, cols:4, desc:"متر كامل من الشهية المتنوعة لتشاركه مع أحبّك", imageUrl:"", flavorImageUrl:"" },
+  { id:"meter",      label:"بيتزا المتر",  priceOld:"150,000", priceNew:"1,500", numericPrice:150000, sliceCount:6, cols:6, desc:"متر كامل من الشهية المتنوعة لتشاركه مع أحبّك", imageUrl:"", flavorImageUrl:"" },
   { id:"sixtyforty", label:"بيتزا 60×40", priceOld:"140,000", priceNew:"1,400", numericPrice:140000, sliceCount:6, cols:3, desc:"الحجم العائلي المثالي للتجمعات", imageUrl:"", flavorImageUrl:"" },
   { id:"khanum",     label:"بيتزا خانم",  priceOld:null, priceNew:null, desc:"كرات العجين محشية بجبنة الشيدر على الأطراف، والمنتصف حسب رغبتك ✨",
     sizes:[{id:"sm",label:"صغيرة",priceOld:"45,000",priceNew:"450",numericPrice:45000},{id:"lg",label:"كبيرة",priceOld:"60,000",priceNew:"600",numericPrice:60000}], imageUrl:"", flavorImageUrl:"" },
