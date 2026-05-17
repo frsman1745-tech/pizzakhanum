@@ -405,10 +405,18 @@ export default function PizzaKhanum() {
     );
   }
 
-  function FlavorGrid({onPick, usedMap={}}) {
-    return (
-      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8}}>
-        {flavors.map(f => {
+function FlavorGrid({onPick, usedMap={}}) {
+    return (
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(6, 1fr)", // جعلها 6 أعمدة بالضبط
+        gridAutoFlow: "column",                // إجبار العناصر على البقاء في سطر واحد ممتد أفقياً
+        gridAutoColumns: "calc(16.66% - 7px)", // حساب مساحة كل عنصر ليتسع السطر لـ 6 أعمدة تماماً
+        gap: 8,
+        overflowX: "auto",                      // تفعيل التمرير الأفقي السلس
+        paddingBottom: 10                       // مساحة بسيطة أسفل السطر لمنع تداخل سكرول الموبايل
+      }}>
+        {flavors.map(f => {
           const cnt = usedMap[f.id]||0;
           return (
             <div key={f.id} className={`flavor-btn${f.comingSoon?" cs":cnt>0?" hfl":""}`} onClick={()=>{if(f.comingSoon)return;onPick(f.id);}}>
@@ -475,7 +483,7 @@ export default function PizzaKhanum() {
 
       <div style={{padding:"24px 16px 0"}}>
         <p style={{fontSize:".63rem",color:"#C8A96A55",letterSpacing:"3px",marginBottom:12}}>🍕 قائمة البيتزا</p>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <div style={{display:"grid",:"1fr 1fr",gap:10}}>
           {pizzasMenu.map(p => (
             <div key={p.id} className={p.comingSoon?"":"card-tap"}
               style={{background:"#131313",border:"1px solid #1c1c1c",borderRadius:14,overflow:"hidden",cursor:p.comingSoon?"default":"pointer",opacity:p.comingSoon?.5:1}}
@@ -529,7 +537,7 @@ export default function PizzaKhanum() {
           </div>
           <div style={{background:"linear-gradient(135deg,#1c1008,#100a04)",border:"2px solid #C8A96A1a",borderRadius:16,padding:12,marginBottom:16}}>
             <p style={{fontSize:".58rem",color:"#C8A96A2a",textAlign:"center",marginBottom:10,letterSpacing:"2px"}}>{builderPizza.label}</p>
-            <div style={{display:"grid",gridTemplateColumns:`repeat(${cols},1fr)`,gap:6}}>
+            <div style={{display:"grid",:`repeat(${cols},1fr)`,gap:6}}>
               {Array.from({length:sliceCount},(_,i)=>{
                 const fid=sliceFlavors[i];
                 const flavorItem=fid?flavors.find(f=>f.id===fid):null;
