@@ -483,7 +483,7 @@ function FlavorGrid({onPick, usedMap={}}) {
 
       <div style={{padding:"24px 16px 0"}}>
         <p style={{fontSize:".63rem",color:"#C8A96A55",letterSpacing:"3px",marginBottom:12}}>🍕 قائمة البيتزا</p>
-        <div style={{display:"grid",:"1fr 1fr",gap:10}}>
+        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:10}}>
           {pizzasMenu.map(p => (
             <div key={p.id} className={p.comingSoon?"":"card-tap"}
               style={{background:"#131313",border:"1px solid #1c1c1c",borderRadius:14,overflow:"hidden",cursor:p.comingSoon?"default":"pointer",opacity:p.comingSoon?.5:1}}
