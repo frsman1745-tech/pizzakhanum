@@ -342,6 +342,7 @@ export default function Admin() {
         khanamSizes:    form.khanamSizes || [],
         sliceCount:     form.sliceCount  || 0,
         cols:           form.cols        || 0,
+        sortOrder:      form.sortOrder   || 0,
       };
 
       let res;
@@ -781,7 +782,7 @@ export default function Admin() {
     </div>
   );
 
-/* ════════════════════════════════════════════════════════════════════════
+  /* ════════════════════════════════════════════════════════════════════════
      ══ DASHBOARD ══
   ════════════════════════════════════════════════════════════════════════ */
   return (
@@ -832,7 +833,7 @@ export default function Admin() {
         {/* ─ Stats ─ */}
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, marginBottom:16 }}>
           {[
-            { l:"القائمة",   v:menu.length,                        c:"#C8A96A", i:"🍕" },
+            { l:"القائمة",  v:menu.length,                           c:"#C8A96A", i:"🍕" },
             { l:"ظاهر",     v:menu.filter(p => !p.comingSoon).length, c:"#4CAF50", i:"✅" },
             { l:"قريباً",   v:menu.filter(p =>  p.comingSoon).length, c:"#ef4444", i:"⏳" },
             { l:"المميزة",  v:featured.length,                        c:"#4DA6FF", i:"⭐" },
@@ -891,6 +892,7 @@ export default function Admin() {
             )}
 
             {displayItems.map(item => {
+              // الصورة من Cloudinary أولاً
               const imgSrc = item.imageUrl || null;
               const hasFlavor = !!item.flavorImageUrl;
               return (
