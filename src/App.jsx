@@ -537,7 +537,7 @@ function FlavorGrid({onPick, usedMap={}}) {
           </div>
           <div style={{background:"linear-gradient(135deg,#1c1008,#100a04)",border:"2px solid #C8A96A1a",borderRadius:16,padding:12,marginBottom:16}}>
             <p style={{fontSize:".58rem",color:"#C8A96A2a",textAlign:"center",marginBottom:10,letterSpacing:"2px"}}>{builderPizza.label}</p>
-            <div style={{display:"grid",:`repeat(${cols},1fr)`,gap:6}}>
+            <div style={{display:"grid", gridTemplateColumns:`repeat(${cols},1fr)`, gap:6}}>
               {Array.from({length:sliceCount},(_,i)=>{
                 const fid=sliceFlavors[i];
                 const flavorItem=fid?flavors.find(f=>f.id===fid):null;
