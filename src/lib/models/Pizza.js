@@ -1,37 +1,33 @@
 // src/lib/models/Pizza.js
 import mongoose from "mongoose";
 
-/* ── خيار واحد داخل مجموعة الإضافات ────────────────────────────────────────
-   مثال: { id:"thin", label:"رفيعة", numericPrice:0, priceOld:"0", priceNew:"0" }
-───────────────────────────────────────────────────────────────────────────── */
+/* ── خيار واحد في مجموعة الإضافات ─────────────────────────────────────────── */
 const ExtraOptionSchema = new mongoose.Schema(
   {
     id:           { type: String, required: true },
     label:        { type: String, required: true, trim: true },
-    priceOld:     { type: String, default: "0" },     // "5,000" ل.س
-    priceNew:     { type: String, default: "0" },     // "50"    ل.ج
-    numericPrice: { type: Number, default: 0  },      // 5000   (للحسابات)
-    sortOrder:    { type: Number, default: 0  },
+    priceOld:     { type: String, default: "0" },
+    priceNew:     { type: String, default: "0" },
+    numericPrice: { type: Number, default: 0   },
+    sortOrder:    { type: Number, default: 0   },
   },
   { _id: false }
 );
 
-/* ── مجموعة إضافات ───────────────────────────────────────────────────────────
-   مثال: { id:"dough", name:"العجينة", type:"single", required:true, options:[...] }
-───────────────────────────────────────────────────────────────────────────── */
+/* ── مجموعة إضافات (عجينة / إضافات / ...) ──────────────────────────────────── */
 const ExtraGroupSchema = new mongoose.Schema(
   {
-    id:       { type: String, required: true },
-    name:     { type: String, required: true, trim: true },  // "العجينة" / "الإضافات"
-    type:     { type: String, enum: ["single","multi"], default: "single" },
-    required: { type: Boolean, default: false },
-    sortOrder:{ type: Number, default: 0 },
-    options:  { type: [ExtraOptionSchema], default: [] },
+    id:        { type: String, required: true },
+    name:      { type: String, required: true, trim: true },
+    type:      { type: String, enum: ["single","multi"], default: "single" },
+    required:  { type: Boolean, default: false },
+    sortOrder: { type: Number, default: 0 },
+    options:   { type: [ExtraOptionSchema], default: [] },
   },
   { _id: false }
 );
 
-/* ── حجم واحد (صغير / وسط / كبير) ──────────────────────────────────────────*/
+/* ── حجم واحد ────────────────────────────────────────────────────────────────── */
 const SizeSchema = new mongoose.Schema(
   {
     id:           { type: String, required: true },
@@ -44,48 +40,65 @@ const SizeSchema = new mongoose.Schema(
   { _id: false }
 );
 
-/* ── الموديل الرئيسي ─────────────────────────────────────────────────────── */
+/* ── قسم القائمة (بيتزا / مشروبات / ...) ───────────────────────────────────── */
+const MenuSectionSchema = new mongoose.Schema(
+  {
+    id:        { type: String, required: true },
+    label:     { type: String, required: true, trim: true },
+    emoji:     { type: String, default: "🍕" },
+    sortOrder: { type: Number, default: 0    },
+  },
+  { _id: false }
+);
+
+/* ══ الموديل الرئيسي ════════════════════════════════════════════════════════ */
 const PizzaSchema = new mongoose.Schema(
   {
-    // معلومات أساسية
+    // ── معلومات أساسية ──────────────────────────────────────────────────────
     name:     { type: String, required: true, trim: true },
-    category: { type: String, enum: ["menu","featured"], default: "menu" },
-    details:  { type: String, default: "" },   // المكونات (للقائمة)
-    desc:     { type: String, default: "" },   // وصف قصير  (للمميزة)
 
-    // الحالة
+    // category: "menu" أو "featured" أو "section"
+    // section = سطر يخزّن أقسام القائمة (بيتزا، مشروبات...)
+    category: { type: String, enum: ["menu","featured","section"], default: "menu" },
+
+    // قسم القائمة الذي تنتمي له هذه البيتزا (id من وثيقة section)
+    menuSection: { type: String, default: "" },
+
+    details:  { type: String, default: "" },
+    desc:     { type: String, default: "" },
+
     comingSoon: { type: Boolean, default: false },
     isActive:   { type: Boolean, default: true  },
 
-    // الصور — روابط Cloudinary
+    // ── الصور ────────────────────────────────────────────────────────────────
     imageUrl:       { type: String, default: "" },
     flavorImageUrl: { type: String, default: "" },
 
-    // الأسعار الثابتة (للمميزة — المتر / 60×40)
+    // ── أسعار ثابتة (للمميزة) ───────────────────────────────────────────────
     fixedPriceOld:     { type: String, default: ""  },
     fixedPriceNew:     { type: String, default: ""  },
     fixedNumericPrice: { type: Number, default: 0   },
 
-    // الأحجام (للقائمة العادية) — يُعرَّفها الأدمن
+    // ── الأحجام (للقائمة) ────────────────────────────────────────────────────
     sizes: { type: [SizeSchema], default: [] },
 
-    // الإضافات — مجموعات يُعرّفها الأدمن (عجينة، إضافات...)
+    // ── الإضافات (عجينة، جبن إضافي...) ──────────────────────────────────────
     extras: { type: [ExtraGroupSchema], default: [] },
 
-    // خاص بـ Builder (المتر / 60×40)
+    // ── Builder: المتر / 60×40 ────────────────────────────────────────────────
     sliceCount: { type: Number, default: 0 },
     cols:       { type: Number, default: 0 },
 
-    // خاص ببيتزا خانم
+    // ── خانم ─────────────────────────────────────────────────────────────────
     khanamSizes: { type: [SizeSchema], default: [] },
 
-    // الترتيب في الواجهة
+    // ── أقسام القائمة (category=section فقط) ─────────────────────────────────
+    sections: { type: [MenuSectionSchema], default: [] },
+
+    // ── الترتيب ──────────────────────────────────────────────────────────────
     sortOrder: { type: Number, default: 0 },
   },
-  {
-    timestamps: true,
-    collection: "pizzas",
-  }
+  { timestamps: true, collection: "pizzas" }
 );
 
 export default mongoose.models.Pizza || mongoose.model("Pizza", PizzaSchema);
