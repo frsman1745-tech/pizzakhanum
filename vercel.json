@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/api/auth/verify",    "destination": "/api/auth/verify" },
+    { "source": "/api/pizzas/:id",     "destination": "/api/pizzas/[id]" },
+    { "source": "/api/pizzas",         "destination": "/api/pizzas/index" },
+    { "source": "/api/featured/:id",   "destination": "/api/featured/[id]" },
+    { "source": "/api/featured",       "destination": "/api/featured/index" },
+    { "source": "/api/sections",       "destination": "/api/sections/index" },
+    { "source": "/admin(.*)",          "destination": "/index.html" },
+    { "source": "/(.*)",               "destination": "/index.html" }
+  ]
+}
