@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   build: {
+    target: "es2022", // <--- هذا هو السطر الذي قمنا بإضافته لحل مشكلة الـ Top-level await
     rollupOptions: {
       // Split vendor chunks for better caching
       output: {
