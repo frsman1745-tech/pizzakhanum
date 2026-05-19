@@ -5,13 +5,17 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import useUiStore from "./store/uiStore.js";
 import Spinner    from "./components/ui/Spinner.jsx";
-import { Suspense, lazy } from "react";
+import React, { Suspense, lazy } from "react";
 
 // Lazy-load screens so each route only loads its code when visited
 const LandingScreen     = lazy(() => import("./features/menu/LandingScreen.jsx"));
 const MenuScreen        = lazy(() => import("./features/menu/MenuScreen.jsx"));
 const SummaryScreen     = lazy(() => import("./features/menu/SummaryScreen.jsx"));
-const { BuilderScreen, KhanamScreen, PizzaDetailScreen } = await import("./features/menu/Screens.jsx");
+
+// التعديل هنا: استيراد الشاشات الثلاثة بأسلوب lazy متوافق بدون استخدام await خارجي
+const BuilderScreen     = lazy(() => import("./features/menu/Screens.jsx").then(module => ({ default: module.BuilderScreen })));
+const KhanamScreen      = lazy(() => import("./features/menu/Screens.jsx").then(module => ({ default: module.KhanamScreen })));
+const PizzaDetailScreen = lazy(() => import("./features/menu/Screens.jsx").then(module => ({ default: module.PizzaDetailScreen })));
 
 const queryClient = new QueryClient({
   defaultOptions: {
