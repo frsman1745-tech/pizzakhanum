@@ -1,0 +1,339 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0f0f0f;
+  color: #E5D3B3;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   🎨 LIGHT MODE — اللون الفاتح (الشمس ☀️)
+   ══════════════════════════════════════════════════════════════════
+   ↳ غيّر القيم تحت "تعديل من هنا" عشان تظبط الألوان بسرعة
+   ══════════════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  /* === 🖍  تعديل من هنا — الألوان الأساسية === */
+  --lm-bg-primary:     #FFFDF7;     /* خلفية الصفحة الرئيسية */
+  --lm-bg-secondary:   #F5F2EC;     /* خلفية ثانوية (كروت، أزرار) */
+  --lm-bg-card:        #FFFFFF;     /* خلفية الكروت والبطاقات */
+  --lm-bg-elevated:    #FAFAF8;     /* عناصر مرتفعة */
+  --lm-bg-gold:        rgba(184,134,11,0.08); /* خلفية ذهبية شفافة */
+
+  --lm-text-primary:   #2C2416;     /* لون النص الرئيسي */
+  --lm-text-secondary: #8B7355;     /* لون النص الثانوي */
+  --lm-text-muted:     #A89880;     /* نصوص باهتة */
+  --lm-text-gold:      #B8860B;     /* النص الذهبي */
+
+  --lm-border:         #E8E0D0;     /* لون الحدود العامة */
+  --lm-border-light:   #F0EBE0;     /* حدود فاتحة */
+  --lm-border-gold:    #D4A84B;     /* حدود ذهبية */
+}
+/* ===== نهاية التعديل ===== */
+
+/* --- خلفيات الصفحات الرئيسية --- */
+[data-theme="light"] div[style*="background:#0f0f0f"],
+[data-theme="light"] div[style*="background:#0d0d0d"],
+[data-theme="light"] div[style*="background:#0a0a0a"],
+[data-theme="light"] div[style*="background:#0d0a0a"],
+[data-theme="light"] div[style*="background: #0f0f0f"],
+[data-theme="light"] div[style*="background: #0d0d0d"],
+[data-theme="light"] body {
+  background: var(--lm-bg-primary) !important;
+}
+
+[data-theme="light"] div[style*="background:#111"],
+[data-theme="light"] div[style*="background: #111"] {
+  background: var(--lm-bg-elevated) !important;
+}
+
+[data-theme="light"] div[style*="background:#131313"],
+[data-theme="light"] div[style*="background:#141414"],
+[data-theme="light"] div[style*="background:#161616"],
+[data-theme="light"] div[style*="background:#1a1a1a"],
+[data-theme="light"] div[style*="background:#1c1c1c"],
+[data-theme="light"] div[style*="background:#1e1e1e"] {
+  background: var(--lm-bg-card) !important;
+}
+
+/* --- كروت المنيو والأصناف --- */
+[data-theme="light"] .featured-card,
+[data-theme="light"] .card-tap {
+  background: var(--lm-bg-card) !important;
+}
+
+[data-theme="light"] .item-anim[style*="background:#131313"] {
+  background: var(--lm-bg-card) !important;
+}
+
+/* --- النصوص الأساسية --- */
+[data-theme="light"] div[style*="color:#E5D3B3"],
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
+[data-theme="light"] h4, [data-theme="light"] p[style*="color:#E5D3B3"],
+[data-theme="light"] span[style*="color:#E5D3B3"] {
+  color: var(--lm-text-primary) !important;
+}
+
+/* --- النصوص الذهبية والثانوية --- */
+[data-theme="light"] div[style*="color:#C8A96A"],
+[data-theme="light"] span[style*="color:#C8A96A"] {
+  color: var(--lm-text-gold) !important;
+}
+
+[data-theme="light"] div[style*="color:#8B6B4A"],
+[data-theme="light"] span[style*="color:#8B6B4A"],
+[data-theme="light"] p[style*="color:#8B6B4A"] {
+  color: var(--lm-text-secondary) !important;
+}
+
+[data-theme="light"] div[style*="color:#444"],
+[data-theme="light"] span[style*="color:#444"],
+[data-theme="light"] p[style*="color:#444"],
+[data-theme="light"] div[style*="color:#333"],
+[data-theme="light"] span[style*="color:#333"],
+[data-theme="light"] p[style*="color:#333"],
+[data-theme="light"] div[style*="color:#252525"],
+[data-theme="light"] span[style*="color:#252525"],
+[data-theme="light"] p[style*="color:#252525"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#555"],
+[data-theme="light"] span[style*="color:#555"],
+[data-theme="light"] div[style*="color:#666"],
+[data-theme="light"] span[style*="color:#666"] {
+  color: var(--lm-text-secondary) !important;
+}
+
+/* --- حدود --- */
+[data-theme="light"] div[style*="border-color:#1a1a1a"],
+[data-theme="light"] div[style*="border:1px solid #1a1a1a"],
+[data-theme="light"] div[style*="border: 1px solid #1a1a1a"],
+[data-theme="light"] div[style*="border:1px solid #161616"],
+[data-theme="light"] div[style*="border-bottom:1px solid #161616"],
+[data-theme="light"] div[style*="border:1px solid #1c1c1c"],
+[data-theme="light"] div[style*="border:1px solid #1e1e1e"],
+[data-theme="light"] div[style*="border:1px solid #222"],
+[data-theme="light"] div[style*="border:1px solid #252525"] {
+  border-color: var(--lm-border) !important;
+}
+
+[data-theme="light"] div[style*="border-bottom:1px solid #161616"] {
+  border-bottom-color: var(--lm-border) !important;
+}
+
+[data-theme="light"] div[style*="border:1px solid #C8A96A1a"],
+[data-theme="light"] div[style*="border:1px solid #C8A96A2a"] {
+  border-color: var(--lm-border-gold) !important;
+}
+
+/* --- خلفيات متدرجة --- */
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#1c1008,#100a04)"] {
+  background: var(--lm-bg-elevated) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#1c0e05,#120a02)"] {
+  background: var(--lm-bg-elevated) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#1a3a1a,#0d1a0d)"] {
+  background: #f0f7f0 !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(180deg,#0f0f0f 85%,transparent)"] {
+  background: linear-gradient(180deg, var(--lm-bg-primary) 85%, transparent) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#C8A96A,#8B6B4A,#C8A96A)"] {
+  background: var(--lm-text-gold) !important;
+}
+
+/* --- أزرار ذهبية --- */
+[data-theme="light"] .btn-gold {
+  background: var(--lm-text-gold) !important;
+  color: #fff !important;
+}
+
+[data-theme="light"] button[style*="background:linear-gradient(135deg,#C8A96A,#8B6B4A,#C8A96A)"] {
+  background: var(--lm-text-gold) !important;
+  color: #fff !important;
+}
+
+[data-theme="light"] button[style*="color:#0f0f0f"] {
+  color: #fff !important;
+}
+
+/* --- حقول الإدخال --- */
+[data-theme="light"] input[style*="background:#161616"],
+[data-theme="light"] textarea[style*="background:#161616"] {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-primary) !important;
+}
+
+[data-theme="light"] input[style*="border:1px solid #252525"],
+[data-theme="light"] textarea[style*="border:1px solid #252525"] {
+  border-color: var(--lm-border) !important;
+}
+
+/* --- التبويبات (sections) --- */
+[data-theme="light"] .sec-tabs {
+  background: transparent !important;
+}
+
+[data-theme="light"] .sec-tab {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] .sec-tab.on {
+  background: var(--lm-bg-gold) !important;
+  color: var(--lm-text-gold) !important;
+}
+
+/* --- أزرار الحجم --- */
+[data-theme="light"] .size-btn {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-secondary) !important;
+}
+
+[data-theme="light"] .size-btn.on {
+  background: var(--lm-text-gold) !important;
+  color: #fff !important;
+}
+
+/* --- شرائح البيتزا --- */
+[data-theme="light"] .slice-cell {
+  background: var(--lm-bg-secondary) !important;
+}
+
+[data-theme="light"] .slice-cell.sel {
+  border-color: #4DA6FF !important;
+  background: #E8F4FD !important;
+}
+
+/* --- أزرار النكهات --- */
+[data-theme="light"] .flavor-btn {
+  background: var(--lm-bg-card) !important;
+}
+
+/* --- الإضافات --- */
+[data-theme="light"] .extra-opt {
+  background: var(--lm-bg-secondary) !important;
+}
+
+[data-theme="light"] .extra-opt.sel {
+  background: var(--lm-bg-gold) !important;
+}
+
+/* --- أزرار التوصيل --- */
+[data-theme="light"] .del-btn {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] .del-btn.on {
+  background: var(--lm-bg-gold) !important;
+  color: var(--lm-text-gold) !important;
+}
+
+/* --- تحقق أخضر --- */
+[data-theme="light"] div[style*="background:#0d1a0d"],
+[data-theme="light"] div[style*="border:1px solid #4CAF5033"] {
+  background: #f0faf0 !important;
+  border-color: #4CAF50 !important;
+  color: #2e7d32 !important;
+}
+
+/* --- نصوص شفافة --- */
+[data-theme="light"] div[style*="color:#C8A96A2a"],
+[data-theme="light"] p[style*="color:#C8A96A2a"],
+[data-theme="light"] span[style*="color:#C8A96A2a"] {
+  color: var(--lm-border-light) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A55"],
+[data-theme="light"] p[style*="color:#C8A96A55"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A66"],
+[data-theme="light"] p[style*="color:#C8A96A66"] {
+  color: var(--lm-text-secondary) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A77"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#1e1e1e"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#222"] {
+  color: var(--lm-text-muted) !important;
+}
+
+/* --- الهيدر اللاصق --- */
+[data-theme="light"] div[style*="position:sticky;top:0;z-index:30"],
+[data-theme="light"] div[style*="position:sticky;top:0;z-index:20"] {
+  background: var(--lm-bg-primary) !important;
+}
+
+/* --- خريطة Leaflet --- */
+[data-theme="light"] .leaflet-container {
+  background: #f8f8f8 !important;
+}
+
+/* --- سكرول الهيدر في المنيو الرئيسي --- */
+[data-theme="light"] .featured-scroll[style*="padding:0 16px 8px"] {
+  scrollbar-color: var(--lm-border) transparent;
+}
+
+/* --- أيقونة الخطأ (الخلفية الحمراء الداكنة) --- */
+[data-theme="light"] div[style*="background:#180f0f"],
+[data-theme="light"] div[style*="border:1px solid #2a1818"],
+[data-theme="light"] button[style*="background:#180f0f"] {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+  color: #dc2626 !important;
+}
+
+/* ================================================================ */
+
+/* ══ RESPONSIVE ════════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+  .featured-card {
+    flex: 0 0 85vw !important;
+  }
+  .sec-tab {
+    font-size: .7rem !important;
+    padding: 5px 10px !important;
+  }
+  div[style*="grid-template-columns: 1fr 1fr"]:not([data-no-resize]) {
+    gap: 7px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .featured-scroll {
+    padding: 0 32px !important;
+  }
+  div[style*="max-width:400"] {
+    max-width: 500px !important;
+  }
+}
+
+/* شريط تحميل الترجمة */
+@keyframes trSlide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
