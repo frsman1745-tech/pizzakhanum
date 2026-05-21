@@ -1,0 +1,518 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0f0f0f;
+  color: #E5D3B3;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   🎨 LIGHT MODE — الوضع الفاتح ☀️
+   ══════════════════════════════════════════════════════════════════
+   ↳ غيّر القيم تحت "تعديل من هنا" عشان تظبط الألوان
+   ══════════════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  /* === 🖍  تعديل من هنا — الألوان الأساسية === */
+  --lm-bg-primary:     #FFFDF7;     /* خلفية الصفحة الرئيسية */
+  --lm-bg-secondary:   #F5F2EC;     /* خلفية ثانوية (كروت، أزرار، حقول) */
+  --lm-bg-card:        #FFFFFF;     /* خلفية الكروت والبطاقات */
+  --lm-bg-elevated:    #FAFAF8;     /* عناصر مرتفعة (خلفيات متدرجة) */
+  --lm-bg-gold:        rgba(184,134,11,0.08); /* خلفية ذهبية شفافة */
+
+  --lm-text-primary:   #2C2416;     /* لون النص الرئيسي */
+  --lm-text-secondary: #8B7355;     /* لون النص الثانوي */
+  --lm-text-muted:     #A89880;     /* نصوص باهتة */
+  --lm-text-gold:      #B8860B;     /* النص الذهبي */
+  --lm-text-on-gold:   #FFFFFF;     /* نص على خلفية ذهبية */
+
+  --lm-border:         #E8E0D0;     /* لون الحدود العامة */
+  --lm-border-light:   #F0EBE0;     /* حدود فاتحة */
+  --lm-border-gold:    #D4A84B;     /* حدود ذهبية */
+}
+/* ===== نهاية التعديل ===== */
+
+/* ──────────── الخلفيات الرئيسية ──────────── */
+
+[data-theme="light"] body,
+[data-theme="light"] #root {
+  background: var(--lm-bg-primary) !important;
+  color: var(--lm-text-primary) !important;
+}
+
+/* الصفحات الرئيسية — كل الشاشات */
+[data-theme="light"] div[style*="background:#0f0f0f"],
+[data-theme="light"] div[style*="background: #0f0f0f"],
+[data-theme="light"] div[style*="background:#0d0d0d"],
+[data-theme="light"] div[style*="background:#0a0a0a"],
+[data-theme="light"] div[style*="background:radial-gradient"] {
+  background: var(--lm-bg-primary) !important;
+}
+
+/* Admin login */
+[data-theme="light"] div[style*="background:radial-gradient"] {
+  background: var(--lm-bg-primary) !important;
+}
+
+/* ──────────── الخلفيات الثانوية والكروت ──────────── */
+[data-theme="light"] div[style*="background:#111"],
+[data-theme="light"] div[style*="background: #111"] {
+  background: var(--lm-bg-elevated) !important;
+}
+
+[data-theme="light"] div[style*="background:#121212"],
+[data-theme="light"] div[style*="background:#131313"],
+[data-theme="light"] div[style*="background:#141414"],
+[data-theme="light"] div[style*="background:#161616"],
+[data-theme="light"] div[style*="background:#1a1a1a"],
+[data-theme="light"] div[style*="background:#1c1c1c"],
+[data-theme="light"] div[style*="background:#1e1e1e"] {
+  background: var(--lm-bg-card) !important;
+}
+
+[data-theme="light"] .featured-card,
+[data-theme="light"] .card-tap {
+  background: var(--lm-bg-card) !important;
+}
+
+[data-theme="light"] .item-anim[style*="background:#131313"] {
+  background: var(--lm-bg-card) !important;
+}
+
+/* Admin element backgrounds */
+[data-theme="light"] div[style*="background:#1c1308"],
+[data-theme="light"] div[style*="background:#1c1408"],
+[data-theme="light"] div[style*="background:#1a1408"] {
+  background: var(--lm-bg-card) !important;
+}
+
+/* Admin danger/error backgrounds */
+[data-theme="light"] div[style*="background:#1a0808"],
+[data-theme="light"] div[style*="background:#180f0f"] {
+  background: #fef2f2 !important;
+}
+
+[data-theme="light"] div[style*="background:#1a0d0d"],
+[data-theme="light"] div[style*="background:#1a1010"] {
+  background: #fef2f2 !important;
+}
+
+/* Admin blue-tinted bg */
+[data-theme="light"] div[style*="background:#06111f"] {
+  background: #eef6ff !important;
+}
+
+/* Green success backgrounds */
+[data-theme="light"] div[style*="background:#0d1a0d"] {
+  background: #f0faf0 !important;
+}
+
+/* ──────────── التدرجات ──────────── */
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#1c1008,#100a04)"] {
+  background: var(--lm-bg-elevated) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#1c0e05,#120a02)"] {
+  background: var(--lm-bg-elevated) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#1c1208,#111)"] {
+  background: var(--lm-bg-secondary) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#1a3a1a,#0d1a0d)"] {
+  background: #f0f7f0 !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#C8A96A,#8B6B4A,#C8A96A)"] {
+  background: var(--lm-text-gold) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(135deg,#C8A96A,#E5D3B3,#8B6B4A,#C8A96A)"] {
+  background: linear-gradient(135deg, var(--lm-text-gold), var(--lm-text-primary), var(--lm-text-secondary), var(--lm-text-gold)) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(90deg,#C8A96A,#E5D3B3)"] {
+  background: linear-gradient(90deg, var(--lm-text-gold), var(--lm-text-primary)) !important;
+}
+
+[data-theme="light"] div[style*="background:linear-gradient(180deg,#0f0f0f 85%,transparent)"] {
+  background: linear-gradient(180deg, var(--lm-bg-primary) 85%, transparent) !important;
+}
+
+/* ──────────── النصوص ──────────── */
+
+[data-theme="light"] {
+  color: var(--lm-text-primary);
+}
+
+[data-theme="light"] div[style*="color:#E5D3B3"],
+[data-theme="light"] span[style*="color:#E5D3B3"],
+[data-theme="light"] p[style*="color:#E5D3B3"],
+[data-theme="light"] h1[style*="color:#E5D3B3"],
+[data-theme="light"] h2[style*="color:#E5D3B3"],
+[data-theme="light"] h3[style*="color:#E5D3B3"],
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4 {
+  color: var(--lm-text-primary) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A"],
+[data-theme="light"] span[style*="color:#C8A96A"],
+[data-theme="light"] p[style*="color:#C8A96A"] {
+  color: var(--lm-text-gold) !important;
+}
+
+[data-theme="light"] div[style*="color:#8B6B4A"],
+[data-theme="light"] span[style*="color:#8B6B4A"],
+[data-theme="light"] p[style*="color:#8B6B4A"] {
+  color: var(--lm-text-secondary) !important;
+}
+
+[data-theme="light"] div[style*="color:#444"],
+[data-theme="light"] span[style*="color:#444"],
+[data-theme="light"] p[style*="color:#444"],
+[data-theme="light"] div[style*="color:#333"],
+[data-theme="light"] span[style*="color:#333"],
+[data-theme="light"] p[style*="color:#333"],
+[data-theme="light"] div[style*="color:#252525"],
+[data-theme="light"] span[style*="color:#252525"],
+[data-theme="light"] p[style*="color:#252525"],
+[data-theme="light"] div[style*="color:#555"],
+[data-theme="light"] span[style*="color:#555"],
+[data-theme="light"] div[style*="color:#666"],
+[data-theme="light"] span[style*="color:#666"],
+[data-theme="light"] div[style*="color:#222"],
+[data-theme="light"] span[style*="color:#222"],
+[data-theme="light"] div[style*="color:#1e1e1e"],
+[data-theme="light"] span[style*="color:#1e1e1e"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A2a"],
+[data-theme="light"] p[style*="color:#C8A96A2a"],
+[data-theme="light"] span[style*="color:#C8A96A2a"] {
+  color: var(--lm-border-light) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A55"],
+[data-theme="light"] p[style*="color:#C8A96A55"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A66"],
+[data-theme="light"] p[style*="color:#C8A96A66"],
+[data-theme="light"] span[style*="color:#C8A96A66"] {
+  color: var(--lm-text-secondary) !important;
+}
+
+[data-theme="light"] div[style*="color:#C8A96A77"],
+[data-theme="light"] span[style*="color:#C8A96A77"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#4CAF50"],
+[data-theme="light"] span[style*="color:#4CAF50"] {
+  color: #2e7d32 !important;
+}
+
+[data-theme="light"] div[style*="color:#6a2a2a"],
+[data-theme="light"] span[style*="color:#6a2a2a"] {
+  color: #dc2626 !important;
+}
+
+[data-theme="light"] div[style*="color:#ef4444"],
+[data-theme="light"] span[style*="color:#ef4444"],
+[data-theme="light"] p[style*="color:#ef4444"] {
+  color: #dc2626 !important;
+}
+
+[data-theme="light"] div[style*="color:#ccc"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#2a2a2a"] {
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] div[style*="color:#0f0f0f"],
+[data-theme="light"] span[style*="color:#0f0f0f"]:not([data-keep]) {
+  color: var(--lm-text-on-gold) !important;
+}
+
+/* نصوص شفافة في المشروعات */
+[data-theme="light"] .featured-card span[style*="color:#C8A96A"] {
+  color: var(--lm-text-gold) !important;
+}
+
+/* ──────────── الحدود ──────────── */
+
+[data-theme="light"] div[style*="border-color:#1a1a1a"],
+[data-theme="light"] div[style*="border:1px solid #1a1a1a"],
+[data-theme="light"] div[style*="border: 1px solid #1a1a1a"],
+[data-theme="light"] div[style*="border:1px solid #161616"],
+[data-theme="light"] div[style*="border-bottom:1px solid #161616"],
+[data-theme="light"] div[style*="border:1px solid #1c1c1c"],
+[data-theme="light"] div[style*="border:1px solid #1e1e1e"],
+[data-theme="light"] div[style*="border:1px solid #222"],
+[data-theme="light"] div[style*="border:1px solid #252525"],
+[data-theme="light"] div[style*="border:1.5px dashed #222"] {
+  border-color: var(--lm-border) !important;
+}
+
+[data-theme="light"] div[style*="border:1px solid #C8A96A1a"],
+[data-theme="light"] div[style*="border:1px solid #C8A96A2a"],
+[data-theme="light"] div[style*="border:2px solid #C8A96A1a"] {
+  border-color: var(--lm-border-gold) !important;
+}
+
+[data-theme="light"] div[style*="border:1px solid #4CAF5033"],
+[data-theme="light"] div[style*="border:1px solid #ef444422"] {
+  border-color: var(--lm-border) !important;
+}
+
+/* ──────────── الهيدر اللاصق ──────────── */
+
+[data-theme="light"] div[style*="position:sticky;top:0;z-index:30"],
+[data-theme="light"] div[style*="position:sticky;top:0;z-index:20"],
+[data-theme="light"] div[style*="position: sticky; top: 0px; z-index: 20"] {
+  background: var(--lm-bg-primary) !important;
+}
+
+/* ──────────── حقول الإدخال ──────────── */
+
+[data-theme="light"] input[style*="background:#161616"],
+[data-theme="light"] textarea[style*="background:#161616"] {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-primary) !important;
+}
+
+[data-theme="light"] input[style*="background:#0a0a0a"] {
+  background: var(--lm-bg-primary) !important;
+}
+
+/* ──────────── الأزرار ──────────── */
+
+[data-theme="light"] .btn-gold {
+  background: var(--lm-text-gold) !important;
+  color: var(--lm-text-on-gold) !important;
+}
+
+[data-theme="light"] button[style*="background:linear-gradient(135deg,#C8A96A,#8B6B4A,#C8A96A)"] {
+  background: var(--lm-text-gold) !important;
+  color: var(--lm-text-on-gold) !important;
+}
+
+[data-theme="light"] button[style*="background:#C8A96A"],
+[data-theme="light"] button[style*="background: #C8A96A"] {
+  background: var(--lm-text-gold) !important;
+}
+
+[data-theme="light"] button[style*="color:#0f0f0f"] {
+  color: var(--lm-text-on-gold) !important;
+}
+
+[data-theme="light"] button[style*="background:#1a1a1a"] {
+  background: var(--lm-bg-secondary) !important;
+}
+
+[data-theme="light"] button[style*="background:#1a0d0d"],
+[data-theme="light"] button[style*="background:#1a1010"],
+[data-theme="light"] button[style*="background:#180f0f"] {
+  background: #fef2f2 !important;
+}
+
+[data-theme="light"] button[style*="background:linear-gradient(135deg,#1a3a1a,#0d1a0d)"] {
+  background: var(--lm-bg-secondary) !important;
+}
+
+/* ──────────── التبويبات ──────────── */
+
+[data-theme="light"] .sec-tab {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] .sec-tab.on {
+  background: var(--lm-bg-gold) !important;
+  color: var(--lm-text-gold) !important;
+}
+
+/* ──────────── أزرار الحجم ──────────── */
+
+[data-theme="light"] .size-btn {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-secondary) !important;
+}
+
+[data-theme="light"] .size-btn.on {
+  background: var(--lm-text-gold) !important;
+  color: var(--lm-text-on-gold) !important;
+}
+
+/* ──────────── شرائح البيتزا ──────────── */
+
+[data-theme="light"] .slice-cell {
+  background: var(--lm-bg-secondary) !important;
+}
+
+[data-theme="light"] .slice-cell.sel {
+  border-color: #4DA6FF !important;
+  background: #E8F4FD !important;
+}
+
+/* ──────────── النكهات ──────────── */
+
+[data-theme="light"] .flavor-btn {
+  background: var(--lm-bg-card) !important;
+}
+
+/* ──────────── الإضافات ──────────── */
+
+[data-theme="light"] .extra-opt {
+  background: var(--lm-bg-secondary) !important;
+}
+
+[data-theme="light"] .extra-opt.sel {
+  background: var(--lm-bg-gold) !important;
+}
+
+/* ──────────── التوصيل ──────────── */
+
+[data-theme="light"] .del-btn {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] .del-btn.on {
+  background: var(--lm-bg-gold) !important;
+  color: var(--lm-text-gold) !important;
+}
+
+/* ───────────ـ Leaflet ──────────── */
+
+[data-theme="light"] .leaflet-container {
+  background: #f8f8f8 !important;
+}
+
+/* ───────────ـ Admin ──────────── */
+
+[data-theme="light"] .mbox {
+  background: var(--lm-bg-card) !important;
+}
+
+[data-theme="light"] .mbg {
+  background: rgba(0,0,0,0.3) !important;
+}
+
+[data-theme="light"] .ai {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-primary) !important;
+  border-color: var(--lm-border) !important;
+}
+
+[data-theme="light"] .chip {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] .chip.on {
+  background: var(--lm-bg-gold) !important;
+  color: var(--lm-text-gold) !important;
+}
+
+[data-theme="light"] .pill {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] .pill.on {
+  background: var(--lm-bg-gold) !important;
+  color: var(--lm-text-gold) !important;
+}
+
+[data-theme="light"] .pill.off {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+}
+
+[data-theme="light"] .ib {
+  background: var(--lm-bg-secondary) !important;
+  border-color: var(--lm-border) !important;
+}
+
+/* Admin tabs */
+[data-theme="light"] .atab {
+  background: var(--lm-bg-secondary) !important;
+  color: var(--lm-text-muted) !important;
+}
+
+[data-theme="light"] .atab.atab-on {
+  background: var(--lm-bg-gold) !important;
+  color: var(--lm-text-gold) !important;
+}
+
+/* Admin items */
+[data-theme="light"] .aitem {
+  background: var(--lm-bg-card) !important;
+  border-color: var(--lm-border) !important;
+}
+
+/* Admin stats */
+[data-theme="light"] .stat-card {
+  background: var(--lm-bg-card) !important;
+  border-color: var(--lm-border) !important;
+}
+
+/* Toast */
+[data-theme="light"] .toast {
+  background: var(--lm-bg-card) !important;
+  border-color: var(--lm-border) !important;
+  color: var(--lm-text-primary) !important;
+}
+
+/* Admin image zone */
+[data-theme="light"] .imgzone {
+  background: var(--lm-bg-secondary) !important;
+  border-color: var(--lm-border) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+  .featured-card {
+    flex: 0 0 85vw !important;
+  }
+  .sec-tab {
+    font-size: .7rem !important;
+    padding: 5px 10px !important;
+  }
+  div[style*="grid-template-columns: 1fr 1fr"]:not([data-no-resize]) {
+    gap: 7px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .featured-scroll {
+    padding: 0 32px !important;
+  }
+  div[style*="max-width:400"] {
+    max-width: 500px !important;
+  }
+}
+
+/* شريط تحميل الترجمة */
+@keyframes trSlide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
