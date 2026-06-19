@@ -34,13 +34,7 @@ export default function handler(req, res) {
     return res.status(400).json({ success: false, error: "كلمة المرور مطلوبة" });
   }
 
-  const inputHash = crypto.createHash("sha256").update(password).digest("hex");
-  const correctHash = crypto.createHash("sha256").update(correct).digest("hex");
-  try {
-    if (!crypto.timingSafeEqual(Buffer.from(inputHash), Buffer.from(correctHash))) {
-      return res.status(401).json({ success: false, error: "كلمة المرور غير صحيحة" });
-    }
-  } catch {
+  if (password !== correct) {
     return res.status(401).json({ success: false, error: "كلمة المرور غير صحيحة" });
   }
 
