@@ -150,7 +150,7 @@ export default function Admin() {
   /* ══ AUTH ════════════════════════════════════════════════════════════════ */
   async function login(e) {
     e.preventDefault();
-    setAuthErr("");
+    setAuthErr("جاري تسجيل الدخول...");
     try {
       const res = await fetch("/api/admin-auth", {
         method: "POST",
@@ -164,24 +164,17 @@ export default function Admin() {
         setPass("");
         return;
       }
-      // إذا السيرفر رد خطأ غير كلمة سر (rate limit أو غيره)
-      if (res.status !== 401) {
-        setAuthErr(data.error || "فشل تسجيل الدخول");
+      setAuthErr(data.error || `خطأ ${res.status}`);
+      return;
+    } catch (e) {
+      // السيرفر ما استجاب — نحاول HONEYPOT
+      if (pass === HONEYPOT_PASS) {
+        lsSet("admin_token", { token: "honeypot", expiresAt: Date.now() + 365 * 24 * 60 * 60 * 1000 });
+        setAuthed(true);
+        setPass("");
         return;
       }
-    } catch {
-      // السيرفر مهندوف — نستخدم الـ HONEYPOT
-    }
-
-    // Fallback: كلمة سر تمويه
-    if (pass === HONEYPOT_PASS) {
-      lsSet("admin_token", { token: "honeypot", expiresAt: Date.now() + 8 * 60 * 60 * 1000 });
-      setAuthed(true);
-      setAuthErr("");
-      setPass("");
-    } else {
-      setAuthErr("كلمة المرور غير صحيحة");
-      setPass("");
+      setAuthErr("❌ السيرفر لا يستجيب — تحقق من الاتصال");
     }
   }
 
