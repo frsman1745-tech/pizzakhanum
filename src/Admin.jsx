@@ -12,8 +12,8 @@ import { parseNum } from "./lib/api.js";
 const lsGet = (k,d) => { try { const v=localStorage.getItem(k); return v?JSON.parse(v):d; } catch { return d; } };
 const lsSet = (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} };
 const uid   = ()   => Math.random().toString(36).slice(2,8);
-const ADMIN_PWD = import.meta.env.VITE_ADMIN_PASSWORD || "pizza2024";
-// ⚠️ في Vercel → Settings → Environment Variables → أضف: VITE_ADMIN_PASSWORD = كلمة_سرك
+
+const ADMIN_PWD = import.meta.env.VITE_ADMIN_PASSWORD || "";
 
 async function uploadToCloudinary(file) {
   const cloud  = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
@@ -67,7 +67,7 @@ const CSS = `
 export default function Admin() {
 
   /* ─── كل useState قبل useEffect ─── */
-  const [authed,     setAuthed]     = useState(() => lsGet("admin_authed", false));
+  const [authed,     setAuthed]     = useState(false);
   const [pass,       setPass]       = useState("");
   const [authErr,    setAuthErr]    = useState("");
 
@@ -134,8 +134,13 @@ export default function Admin() {
   /* ══ AUTH ════════════════════════════════════════════════════════════════ */
   function login(e) {
     e.preventDefault();
-    if (pass === ADMIN_PWD) { setAuthed(true); lsSet("admin_authed",true); setAuthErr(""); }
-    else { setAuthErr("كلمة المرور غير صحيحة"); setPass(""); }
+    if (pass === ADMIN_PWD) {
+      setAuthed(true);
+      setPass("");
+    } else {
+      setAuthErr("كلمة المرور غير صحيحة");
+      setPass("");
+    }
   }
 
   /* ══ SECTIONS ════════════════════════════════════════════════════════════ */
@@ -735,7 +740,7 @@ export default function Admin() {
           <button className="ib" onClick={exportData} title="تصدير">📦</button>
           <label className="ib" style={{cursor:"pointer"}} title="استيراد">📥<input ref={impRef} type="file" accept=".json" onChange={importData} style={{display:"none"}}/></label>
           <button className="ib" onClick={()=>setTick(t=>t+1)} style={{color:"#C8A96A"}}>🔄</button>
-          <button className="ib" onClick={()=>{setAuthed(false);lsSet("admin_authed",false);}} style={{background:"#1a1010",border:"1px solid #ef44441a",color:"#444"}}>خروج</button>
+          <button className="ib" onClick={()=>{setAuthed(false);}} style={{background:"#1a1010",border:"1px solid #ef44441a",color:"#444"}}>خروج</button>
         </div>
       </div>
 
@@ -893,7 +898,7 @@ export default function Admin() {
             {[["اسم المطعم",siteName,setSiteName,false],["الشعار",slogan,setSlogan,false],["رقم واتساب",wapp,setWapp,true]].map(([l,v,s,ltr]) => (
               <div key={l} style={{marginBottom:11}}>
                 <span className="sl" style={{marginTop:0}}>{l}</span>
-                <input className="ai" value={v} onChange={e=>s(e.target.value)} dir={ltr?"ltr":"rtl"}/>
+                <input className="ai" value={v} onChange={e=>s(e.target.value)} dir={ltr?"ltr":undefined} style={ltr?{textAlign:"left",unicodeBidi:"plaintext"}:{}}/>
               </div>
             ))}
             <button className="bp" style={{width:"100%",marginTop:6}} onClick={saveSettings}>💾 حفظ الإعدادات</button>

@@ -102,9 +102,9 @@ export default function PizzaKhanum() {
   const displayMenu = translated?.menu || pizzasMenu;
   const displaySectionsArr = translated?.sections || menuSections;
 
-  const siteName = localStorage.getItem("site_name")    || "بيتزا خانم";
-  const slogan   = localStorage.getItem("site_slogan")  || t("site_slogan", lang);
-  const wappNum  = localStorage.getItem("site_whatsapp")|| "963998950904";
+  const siteName = (()=>{try{return JSON.parse(localStorage.getItem("site_name"))}catch{return null}})() || "بيتزا خانم";
+  const slogan   = (()=>{try{return JSON.parse(localStorage.getItem("site_slogan"))}catch{return null}})() || t("site_slogan", lang);
+  const wappNum  = (()=>{try{return JSON.parse(localStorage.getItem("site_whatsapp"))}catch{return null}})() || "963998950904";
 
   const flavors = useMemo(()=>
     displayMenu
