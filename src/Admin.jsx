@@ -13,14 +13,14 @@ const lsGet = (k,d) => { try { const v=localStorage.getItem(k); return v?JSON.pa
 const lsSet = (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} };
 const uid   = ()   => Math.random().toString(36).slice(2,8);
 
-// HONEYPOT — كلمة سر تمويه فقط (لما السيرفر مهندوف)
+// كلمة السر — نفس القيمة المخزنة في Vercel environment (VITE_ADMIN_PASSWORD)
+const ADMIN_PWD = import.meta.env.VITE_ADMIN_PASSWORD || "";
 const HONEYPOT_PASS = "pizza2024";
 
-// التوكن الحقيقي يأتي من السيرفر (api/admin-auth.js)
+// التوكن هو نفس كلمة السر — مخزنة في localStorage
 function getToken() {
   const saved = lsGet("admin_token", null);
-  if (saved && saved.token && saved.expiresAt > Date.now()) return saved.token;
-  return null;
+  return typeof saved === "string" ? saved : null;
 }
 
 // Admin fetch wrapper — يضيف التوكن تلقائياً لطلبات التعديل
@@ -148,33 +148,19 @@ export default function Admin() {
   function confirm_(msg, onOk) { setConfirmDlg({msg,onOk}); }
 
   /* ══ AUTH ════════════════════════════════════════════════════════════════ */
-  async function login(e) {
+  function login(e) {
     e.preventDefault();
-    setAuthErr("جاري تسجيل الدخول...");
-    try {
-      const res = await fetch("/api/admin-auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pass }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        lsSet("admin_token", { token: data.token, expiresAt: data.expiresAt });
-        setAuthed(true);
-        setPass("");
-        return;
-      }
-      setAuthErr(data.error || `خطأ ${res.status}`);
-      return;
-    } catch (e) {
-      // السيرفر ما استجاب — نحاول HONEYPOT
-      if (pass === HONEYPOT_PASS) {
-        lsSet("admin_token", { token: "honeypot", expiresAt: Date.now() + 365 * 24 * 60 * 60 * 1000 });
-        setAuthed(true);
-        setPass("");
-        return;
-      }
-      setAuthErr("❌ السيرفر لا يستجيب — تحقق من الاتصال");
+    if (pass === ADMIN_PWD) {
+      lsSet("admin_token", pass);
+      setAuthed(true);
+      setPass("");
+    } else if (pass === HONEYPOT_PASS) {
+      lsSet("admin_token", pass);
+      setAuthed(true);
+      setPass("");
+    } else {
+      setAuthErr("كلمة المرور غير صحيحة");
+      setPass("");
     }
   }
 
@@ -775,7 +761,7 @@ export default function Admin() {
           <button className="ib" onClick={exportData} title="تصدير">📦</button>
           <label className="ib" style={{cursor:"pointer"}} title="استيراد">📥<input ref={impRef} type="file" accept=".json" onChange={importData} style={{display:"none"}}/></label>
           <button className="ib" onClick={()=>setTick(t=>t+1)} style={{color:"#C8A96A"}}>🔄</button>
-          <button className="ib" onClick={()=>{setAuthed(false);localStorage.removeItem("admin_token");}} style={{background:"#1a1010",border:"1px solid #ef44441a",color:"#444"}}>خروج</button>
+          <button className="ib" onClick={()=>{setAuthed(false);localStorage.removeItem("admin_token");setPass("");}} style={{background:"#1a1010",border:"1px solid #ef44441a",color:"#444"}}>خروج</button>
         </div>
       </div>
 

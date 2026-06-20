@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { connectDB } from "../src/lib/mongodb.js";
 import Pizza        from "../src/lib/models/Pizza.js";
 import { toFrontend, toBackend } from "../src/lib/api.js";
@@ -21,24 +20,10 @@ function isLimited(map, max, windowMs, ip) {
 function verifyAdmin(req, res) {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
-  const correct = process.env.ADMIN_PASSWORD;
+  const correct = process.env.VITE_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
   if (!correct) { res.status(500).json({ success: false, error: "Server misconfigured" }); return false; }
-  try {
-    const parts = token.split(".");
-    if (parts.length < 2) throw new Error();
-    const ts = parts[0];
-    const sig = parts.slice(1).join(".");
-    const expected = crypto.createHmac("sha256", correct).update(ts).digest("hex");
-    if (Date.now() > Number(ts) + 365 * 24 * 60 * 60 * 1000) {
-      res.status(401).json({ success: false, error: "انتهت صلاحية التوكن" }); return false;
-    }
-    if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) {
-      res.status(401).json({ success: false, error: "توكن غير صالح" }); return false;
-    }
-    return true;
-  } catch {
-    res.status(401).json({ success: false, error: "توكن غير صالح" }); return false;
-  }
+  if (token !== correct) { res.status(401).json({ success: false, error: "غير مصرح" }); return false; }
+  return true;
 }
 
 export default async function handler(req, res) {
