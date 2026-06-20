@@ -13,23 +13,7 @@ const lsGet = (k,d) => { try { const v=localStorage.getItem(k); return v?JSON.pa
 const lsSet = (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} };
 const uid   = ()   => Math.random().toString(36).slice(2,8);
 
-// كلمة السر — نفس القيمة المخزنة في Vercel environment (VITE_ADMIN_PASSWORD)
 const ADMIN_PWD = import.meta.env.VITE_ADMIN_PASSWORD || "";
-const HONEYPOT_PASS = "pizza2024";
-
-// التوكن هو نفس كلمة السر — مخزنة في localStorage
-function getToken() {
-  const saved = lsGet("admin_token", null);
-  return typeof saved === "string" ? saved : null;
-}
-
-// Admin fetch wrapper — يضيف التوكن تلقائياً لطلبات التعديل
-async function adminFetch(url, options = {}) {
-  const token = getToken();
-  const headers = { ...options.headers, "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  return fetch(url, { ...options, headers });
-}
 
 async function uploadToCloudinary(file) {
   const cloud  = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
@@ -83,7 +67,7 @@ const CSS = `
 export default function Admin() {
 
   /* ─── كل useState قبل useEffect ─── */
-  const [authed,     setAuthed]     = useState(() => !!getToken());
+  const [authed,     setAuthed]     = useState(false);
   const [pass,       setPass]       = useState("");
   const [authErr,    setAuthErr]    = useState("");
 
@@ -151,11 +135,6 @@ export default function Admin() {
   function login(e) {
     e.preventDefault();
     if (pass === ADMIN_PWD) {
-      lsSet("admin_token", pass);
-      setAuthed(true);
-      setPass("");
-    } else if (pass === HONEYPOT_PASS) {
-      lsSet("admin_token", pass);
       setAuthed(true);
       setPass("");
     } else {
@@ -182,8 +161,8 @@ export default function Admin() {
       const existing = await fetch("/api/pizzas?category=section").then(r=>r.json());
       const secDoc   = (existing.data||[])[0];
       const payload  = { label:"__sections__", type:"section", sections: secForm.map((s,i)=>({...s,sortOrder:i})) };
-      if (secDoc) { await adminFetch(`/api/pizzas/${secDoc.id}`,{method:"PUT",body:JSON.stringify(payload)}); }
-      else { await adminFetch("/api/pizzas",{method:"POST",body:JSON.stringify(payload)}); }
+      if (secDoc) { await fetch(`/api/pizzas/${secDoc.id}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}); }
+      else { await fetch("/api/pizzas",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}); }
       toast_("✅ تم حفظ الأقسام"); log("تعديل الأقسام"); setSecModal(false); setTick(t=>t+1);
     } catch(e) { toast_("❌ "+e.message,"err"); }
     finally { setSavingSec(false); }
@@ -289,7 +268,7 @@ export default function Admin() {
       };
       const url    = editing.isNew ? "/api/pizzas" : `/api/pizzas/${editing.id}`;
       const method = editing.isNew ? "POST"        : "PUT";
-      const res = await adminFetch(url, { method, body:JSON.stringify(payload) });
+      const res = await fetch(url, { method, headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
       if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e.error||`HTTP ${res.status}`); }
       toast_(editing.isNew ? "✅ تم الإضافة" : "✅ تم التعديل");
       log(editing.isNew ? `إضافة: ${form.label}` : `تعديل: ${form.label}`);
@@ -303,7 +282,7 @@ export default function Admin() {
     const item = list.find(x => x.id===id || x._id===id);
     confirm_(`حذف "${item?.label}"؟`, async () => {
       try {
-        const res = await adminFetch(`/api/pizzas/${item?._id||id}`, { method:"DELETE" });
+        const res = await fetch(`/api/pizzas/${item?._id||id}`, { method:"DELETE" });
         if (!res.ok) throw new Error("HTTP "+res.status);
         toast_("🗑 تم الحذف"); log(`حذف: ${item?.label}`); setTick(t=>t+1);
       } catch(e) { toast_("❌ "+e.message,"err"); }
@@ -314,7 +293,7 @@ export default function Admin() {
     const item = menu.find(x => x.id===id || x._id===id);
     if (!item) return;
     try {
-      await adminFetch(`/api/pizzas/${item._id||id}`, { method:"PATCH", body:JSON.stringify({comingSoon:!item.comingSoon}) });
+      await fetch(`/api/pizzas/${item._id||id}`, { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify({comingSoon:!item.comingSoon}) });
       log(`${item.comingSoon?"إظهار":"إخفاء"}: ${item.label}`); setTick(t=>t+1);
     } catch(e) { toast_("❌ "+e.message,"err"); }
   }
@@ -324,7 +303,7 @@ export default function Admin() {
     const item = list.find(x => x.id===id || x._id===id);
     if (!item) return;
     try {
-      const res = await adminFetch("/api/pizzas", { method:"POST", body:JSON.stringify({...item,label:item.label+" — نسخة",_id:undefined,id:undefined}) });
+      const res = await fetch("/api/pizzas", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({...item,label:item.label+" — نسخة",_id:undefined,id:undefined}) });
       if (!res.ok) throw new Error("HTTP "+res.status);
       toast_("📋 تم النسخ"); log(`نسخ: ${item.label}`); setTick(t=>t+1);
     } catch(e) { toast_("❌ "+e.message,"err"); }
@@ -346,7 +325,7 @@ export default function Admin() {
   async function onDragEnd(type) {
     setDragId(null);
     const list = type==="menu" ? menu : featured;
-    try { await Promise.all(list.map((item,idx) => adminFetch(`/api/pizzas/${item._id||item.id}`,{method:"PATCH",body:JSON.stringify({sortOrder:idx})}))); log("ترتيب القائمة"); }
+    try { await Promise.all(list.map((item,idx) => fetch(`/api/pizzas/${item._id||item.id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({sortOrder:idx})}))); log("ترتيب القائمة"); }
     catch(e) { console.error("[sort]",e); }
   }
 
@@ -360,7 +339,7 @@ export default function Admin() {
     });
     setTimeout(async () => {
       if (!nl) return;
-      await Promise.all(nl.map((item,idx) => adminFetch(`/api/pizzas/${item._id||item.id}`,{method:"PATCH",body:JSON.stringify({sortOrder:idx})})));
+      await Promise.all(nl.map((item,idx) => fetch(`/api/pizzas/${item._id||item.id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({sortOrder:idx})})));
     }, 100);
   }
 
@@ -390,7 +369,7 @@ export default function Admin() {
         const p = JSON.parse(ev.target.result);
         const items = [...(p.menu||[]),...(p.featured||[])];
         let c = 0;
-        for (const item of items) { const res=await adminFetch("/api/pizzas",{method:"POST",body:JSON.stringify(item)}); if(res.ok)c++; }
+        for (const item of items) { const res=await fetch("/api/pizzas",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(item)}); if(res.ok)c++; }
         toast_(`📥 تم استيراد ${c} صنف`); log("استيراد"); setTick(t=>t+1);
       } catch { toast_("⚠ ملف غير صالح","err"); }
     };
@@ -761,7 +740,7 @@ export default function Admin() {
           <button className="ib" onClick={exportData} title="تصدير">📦</button>
           <label className="ib" style={{cursor:"pointer"}} title="استيراد">📥<input ref={impRef} type="file" accept=".json" onChange={importData} style={{display:"none"}}/></label>
           <button className="ib" onClick={()=>setTick(t=>t+1)} style={{color:"#C8A96A"}}>🔄</button>
-          <button className="ib" onClick={()=>{setAuthed(false);localStorage.removeItem("admin_token");setPass("");}} style={{background:"#1a1010",border:"1px solid #ef44441a",color:"#444"}}>خروج</button>
+          <button className="ib" onClick={()=>{setAuthed(false);}} style={{background:"#1a1010",border:"1px solid #ef44441a",color:"#444"}}>خروج</button>
         </div>
       </div>
 
@@ -926,7 +905,7 @@ export default function Admin() {
             <div style={{marginTop:13,background:"#0f0f0f",border:"1px solid #161616",borderRadius:10,padding:13}}>
               <p style={{fontSize:".62rem",color:"#1e1e1e",marginBottom:9}}>⚠️ منطقة خطر</p>
               <button className="bd" style={{width:"100%",padding:"10px"}} onClick={()=>confirm_("حذف كل البيانات؟ لا يمكن التراجع!",async()=>{
-                for(const item of [...menu,...featured]){ await adminFetch(`/api/pizzas/${item._id||item.id}`,{method:"DELETE"}).catch(()=>{}); }
+                for(const item of [...menu,...featured]){ await fetch(`/api/pizzas/${item._id||item.id}`,{method:"DELETE"}).catch(()=>{}); }
                 toast_("↺ تم المسح","warn"); log("مسح كل البيانات"); setTick(t=>t+1);
               })}>↺ مسح كل البيانات</button>
             </div>

@@ -5,11 +5,6 @@ import "./index.css";
 import App from "./App.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { SettingsProvider } from "./contexts/SettingsContext.jsx";
-import { initSecurity } from "./lib/security.js";
-
-initSecurity();
-
-const ADMIN_PATH = import.meta.env.VITE_ADMIN_PATH || "/admin";
 
 const AdminPage = lazy(() => import("./Admin.jsx"));
 
@@ -20,7 +15,7 @@ createRoot(document.getElementById("root")).render(
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<App />} />
-            <Route path={`${ADMIN_PATH}/*`} element={
+            <Route path="/admin/*" element={
               <Suspense fallback={
                 <div style={{
                   minHeight: "100vh", background: "#0a0a0a",
