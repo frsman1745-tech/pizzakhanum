@@ -397,7 +397,17 @@ export default function Admin() {
     r.readAsText(file); e.target.value="";
   }
 
-  function saveSettings() { lsSet("site_name",siteName); lsSet("site_slogan",slogan); lsSet("site_whatsapp",wapp); log("تعديل الإعدادات"); toast_("⚙️ تم حفظ الإعدادات"); }
+  async function saveSettings() {
+    lsSet("site_name",siteName); lsSet("site_slogan",slogan); lsSet("site_whatsapp",wapp);
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST", headers: authHeaders(),
+        body: JSON.stringify({ siteName, siteSlogan, siteWhatsapp: wapp }),
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      log("تعديل الإعدادات"); toast_("⚙️ تم حفظ الإعدادات");
+    } catch(e) { toast_("❌ "+e.message,"err"); }
+  }
 
   /* ── فلترة ── */
   const src = tab==="menu" ? menu : featured;

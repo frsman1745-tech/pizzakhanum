@@ -102,9 +102,18 @@ export default function PizzaKhanum() {
   const displayMenu = translated?.menu || pizzasMenu;
   const displaySectionsArr = translated?.sections || menuSections;
 
-  const siteName = (()=>{try{return JSON.parse(localStorage.getItem("site_name"))}catch{return null}})() || "بيتزا خانم";
-  const slogan   = (()=>{try{return JSON.parse(localStorage.getItem("site_slogan"))}catch{return null}})() || t("site_slogan", lang);
-  const wappNum  = (()=>{try{return JSON.parse(localStorage.getItem("site_whatsapp"))}catch{return null}})() || "963998950904";
+  const [siteName, setSiteName] = useState(() => {
+    try { const v = localStorage.getItem("site_name"); return v ? JSON.parse(v) : null; } catch {}
+    return "بيتزا خانم";
+  });
+  const [slogan, setSlogan] = useState(() => {
+    try { const v = localStorage.getItem("site_slogan"); return v ? JSON.parse(v) : null; } catch {}
+    return t("site_slogan", lang);
+  });
+  const [wappNum, setWappNum] = useState(() => {
+    try { const v = localStorage.getItem("site_whatsapp"); return v ? JSON.parse(v) : null; } catch {}
+    return "963998950904";
+  });
 
   const flavors = useMemo(()=>
     displayMenu
@@ -130,6 +139,16 @@ export default function PizzaKhanum() {
       finally{setLoading(false);}
     }
     load();
+  },[]);
+
+  useEffect(()=>{
+    fetch("/api/settings").then(r=>r.json()).then(j=>{
+      if(!j.success) return;
+      const d = j.data;
+      if (d.siteName)    { setSiteName(d.siteName);    try{localStorage.setItem("site_name",JSON.stringify(d.siteName))}catch{} }
+      if (d.siteSlogan)  { setSlogan(d.siteSlogan);    try{localStorage.setItem("site_slogan",JSON.stringify(d.siteSlogan))}catch{} }
+      if (d.siteWhatsapp){ setWappNum(d.siteWhatsapp); try{localStorage.setItem("site_whatsapp",JSON.stringify(d.siteWhatsapp))}catch{} }
+    }).catch(()=>{});
   },[]);
 
   useEffect(()=>{
