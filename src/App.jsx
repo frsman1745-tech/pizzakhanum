@@ -274,7 +274,7 @@ export default function PizzaKhanum() {
         {FLOATERS.map((f,i)=>(<div key={i} style={{position:"absolute",fontSize:"1.7rem",opacity:.15,left:f.l,top:f.t,animation:`floatUp ${f.d}s ease-in-out ${f.dl}s infinite`,pointerEvents:"none"}}>{f.e}</div>))}
         <div className="fade-up" style={{maxWidth:400}}>
           <div style={{width:100,height:100,borderRadius:"50%",border:"2px solid var(--gold-33)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px",animation:"glow 3s ease-in-out infinite",fontSize:"2.8rem"}}>🍕</div>
-          <h1 style={{fontSize:"clamp(2.6rem,9vw,4rem)",fontWeight:900,background:"var(--gradient-brand-diag)",backgroundSize:"200% auto",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",animation:"shimmer 4s linear infinite",lineHeight:1.1,marginBottom:11}}>{siteName}</h1>
+          <h1 style={{fontSize:"clamp(2.6rem,9vw,4rem)",fontWeight:900,background:"var(--gradient-brand-diag)",backgroundSize:"200% auto",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",animation:"shimmer 4s linear infinite",lineHeight:1.3,marginBottom:11}}>{siteName}</h1>
           <p style={{fontSize:"clamp(.85rem,3vw,.95rem)",color:"var(--text-secondary)",marginBottom:44,fontWeight:300,letterSpacing:".5px",lineHeight:1.8}}>{slogan}</p>
           <button className="btn-gold" onClick={()=>setScreen("menu")} style={{padding:"15px 48px",borderRadius:"50px",fontSize:"1rem",fontWeight:700,color:"var(--text-on-gold)",letterSpacing:"1px",animation:"glow 3s ease-in-out infinite"}}>{t("start_order", lang)}</button>
         </div>
