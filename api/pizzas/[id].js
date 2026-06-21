@@ -1,80 +1,85 @@
 import { connectDB } from "../../src/lib/mongodb.js";
 import Pizza        from "../../src/lib/models/Pizza.js";
 import { toFrontend, toBackendPartial } from "../../src/lib/api.js";
+import { corsHeaders, handleOptions, rateLimit, requireAdmin, sanitizeError, isValidObjectId } from "../../src/lib/auth.js";
 
-const readLimiter = new Map();
-const writeLimiter = new Map();
+const ALLOWED_FIELDS = [
+  "label", "type", "menuSection", "details", "desc",
+  "comingSoon", "imageUrl", "flavorImageUrl",
+  "priceOld", "priceNew", "numericPrice",
+  "sizes", "khanamSizes", "extras", "sliceCount", "cols", "sortOrder",
+];
 
-function getIP(req) {
-  return req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.headers["x-real-ip"] || "unknown";
-}
-
-function isLimited(map, max, windowMs, ip) {
-  const now = Date.now();
-  const d = map.get(ip);
-  if (!d || now > d.resetAt) { map.set(ip, { count: 1, resetAt: now + windowMs }); return false; }
-  d.count++;
-  return d.count > max;
-}
-
-function verifyAdmin(req, res) {
-  const auth = req.headers.authorization || "";
-  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
-  const correct = process.env.VITE_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
-  if (!correct) { res.status(500).json({ success: false, error: "Server misconfigured" }); return false; }
-  if (token !== correct) { res.status(401).json({ success: false, error: "غير مصرح" }); return false; }
-  return true;
+function sanitizeBody(body) {
+  const clean = {};
+  for (const key of ALLOWED_FIELDS) {
+    if (body[key] !== undefined) clean[key] = body[key];
+  }
+  return clean;
 }
 
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, PUT, PATCH, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") return res.status(200).end();
+  if (handleOptions(req, res)) return;
+  corsHeaders(res);
 
   if (!["GET", "PUT", "PATCH", "DELETE"].includes(req.method)) {
-    return res.status(405).json({ success: false, error: `Method ${req.method} غير مدعوم` });
+    return res.status(405).json({ success: false, error: "Method Not Allowed" });
   }
 
   try { await connectDB(); }
-  catch (e) { return res.status(500).json({ success: false, error: "فشل الاتصال بقاعدة البيانات" }); }
+  catch (e) {
+    console.error("[pizzas/id] MongoDB connection error:", e);
+    return res.status(500).json({ success: false, error: "Database connection failed" });
+  }
 
   const { id } = req.query;
-  const ip = getIP(req);
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ success: false, error: "معرف غير صالح" });
+  }
+
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "unknown";
 
   if (req.method === "GET") {
-    if (isLimited(readLimiter, 120, 60000, ip)) {
+    if (rateLimit(ip, "read")) {
       return res.status(429).json({ success: false, error: "طلبات كثيرة — تأنى قليلاً" });
     }
     try {
       const p = await Pizza.findById(id);
       if (!p) return res.status(404).json({ success: false, error: "غير موجود" });
       return res.status(200).json({ success: true, data: toFrontend(p) });
-    } catch (e) { return res.status(400).json({ success: false, error: e.message }); }
+    } catch (e) {
+      console.error("[pizzas/id] GET error:", e);
+      return res.status(400).json({ success: false, error: sanitizeError(e) });
+    }
   }
 
   if (["PUT", "PATCH", "DELETE"].includes(req.method)) {
-    if (isLimited(writeLimiter, 30, 60000, ip)) {
+    if (rateLimit(ip, "write")) {
       return res.status(429).json({ success: false, error: "طلبات كثيرة — تأنى قليلاً" });
     }
-    if (!verifyAdmin(req, res)) return;
+    if (!requireAdmin(req, res)) return;
   }
 
   if (req.method === "PUT") {
     try {
-      const p = await Pizza.findByIdAndUpdate(id, toBackendPartial(req.body), { new: true, runValidators: true });
+      const p = await Pizza.findByIdAndUpdate(id, toBackendPartial(sanitizeBody(req.body)), { new: true, runValidators: true });
       if (!p) return res.status(404).json({ success: false, error: "غير موجود" });
       return res.status(200).json({ success: true, data: toFrontend(p) });
-    } catch (e) { return res.status(400).json({ success: false, error: e.message }); }
+    } catch (e) {
+      console.error("[pizzas/id] PUT error:", e);
+      return res.status(400).json({ success: false, error: sanitizeError(e) });
+    }
   }
 
   if (req.method === "PATCH") {
     try {
-      const p = await Pizza.findByIdAndUpdate(id, toBackendPartial(req.body), { new: true });
+      const p = await Pizza.findByIdAndUpdate(id, toBackendPartial(sanitizeBody(req.body)), { new: true });
       if (!p) return res.status(404).json({ success: false, error: "غير موجود" });
       return res.status(200).json({ success: true, data: toFrontend(p) });
-    } catch (e) { return res.status(400).json({ success: false, error: e.message }); }
+    } catch (e) {
+      console.error("[pizzas/id] PATCH error:", e);
+      return res.status(400).json({ success: false, error: sanitizeError(e) });
+    }
   }
 
   if (req.method === "DELETE") {
@@ -82,6 +87,9 @@ export default async function handler(req, res) {
       const p = await Pizza.findByIdAndDelete(id);
       if (!p) return res.status(404).json({ success: false, error: "غير موجود" });
       return res.status(200).json({ success: true, message: "تم الحذف" });
-    } catch (e) { return res.status(400).json({ success: false, error: e.message }); }
+    } catch (e) {
+      console.error("[pizzas/id] DELETE error:", e);
+      return res.status(400).json({ success: false, error: sanitizeError(e) });
+    }
   }
 }

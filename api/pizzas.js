@@ -1,49 +1,41 @@
 import { connectDB } from "../src/lib/mongodb.js";
 import Pizza        from "../src/lib/models/Pizza.js";
 import { toFrontend, toBackend } from "../src/lib/api.js";
+import { corsHeaders, handleOptions, rateLimit, requireAdmin, sanitizeError } from "../src/lib/auth.js";
 
-const readLimiter = new Map();
-const writeLimiter = new Map();
+const ALLOWED_FIELDS = [
+  "label", "type", "menuSection", "details", "desc",
+  "comingSoon", "imageUrl", "flavorImageUrl",
+  "priceOld", "priceNew", "numericPrice",
+  "sizes", "khanamSizes", "extras", "sliceCount", "cols", "sortOrder",
+];
 
-function getIP(req) {
-  return req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.headers["x-real-ip"] || "unknown";
-}
-
-function isLimited(map, max, windowMs, ip) {
-  const now = Date.now();
-  const d = map.get(ip);
-  if (!d || now > d.resetAt) { map.set(ip, { count: 1, resetAt: now + windowMs }); return false; }
-  d.count++;
-  return d.count > max;
-}
-
-function verifyAdmin(req, res) {
-  const auth = req.headers.authorization || "";
-  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
-  const correct = process.env.VITE_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
-  if (!correct) { res.status(500).json({ success: false, error: "Server misconfigured" }); return false; }
-  if (token !== correct) { res.status(401).json({ success: false, error: "غير مصرح" }); return false; }
-  return true;
+function sanitizeBody(body) {
+  const clean = {};
+  for (const key of ALLOWED_FIELDS) {
+    if (body[key] !== undefined) clean[key] = body[key];
+  }
+  return clean;
 }
 
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") return res.status(200).end();
+  if (handleOptions(req, res)) return;
+  corsHeaders(res);
 
   if (req.method !== "GET" && req.method !== "POST") {
-    return res.status(405).json({ success: false, error: `Method ${req.method} غير مدعوم` });
+    return res.status(405).json({ success: false, error: "Method Not Allowed" });
   }
 
   try { await connectDB(); }
-  catch (e) { return res.status(500).json({ success: false, error: "فشل الاتصال بقاعدة البيانات" }); }
+  catch (e) {
+    console.error("[pizzas] MongoDB connection error:", e);
+    return res.status(500).json({ success: false, error: "Database connection failed" });
+  }
 
-  const ip = getIP(req);
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "unknown";
 
   if (req.method === "GET") {
-    if (isLimited(readLimiter, 120, 60000, ip)) {
+    if (rateLimit(ip, "read")) {
       return res.status(429).json({ success: false, error: "طلبات كثيرة — تأنى قليلاً" });
     }
     try {
@@ -51,17 +43,23 @@ export default async function handler(req, res) {
       if (req.query.category) filter.category = req.query.category;
       const items = await Pizza.find(filter).sort({ sortOrder: 1, createdAt: -1 });
       return res.status(200).json({ success: true, data: items.map(toFrontend) });
-    } catch (e) { return res.status(500).json({ success: false, error: e.message }); }
+    } catch (e) {
+      console.error("[pizzas] GET error:", e);
+      return res.status(500).json({ success: false, error: sanitizeError(e) });
+    }
   }
 
   if (req.method === "POST") {
-    if (isLimited(writeLimiter, 30, 60000, ip)) {
+    if (rateLimit(ip, "write")) {
       return res.status(429).json({ success: false, error: "طلبات كثيرة — تأنى قليلاً" });
     }
-    if (!verifyAdmin(req, res)) return;
+    if (!requireAdmin(req, res)) return;
     try {
-      const p = await Pizza.create(toBackend(req.body));
+      const p = await Pizza.create(toBackend(sanitizeBody(req.body)));
       return res.status(201).json({ success: true, data: toFrontend(p) });
-    } catch (e) { return res.status(400).json({ success: false, error: e.message }); }
+    } catch (e) {
+      console.error("[pizzas] POST error:", e);
+      return res.status(400).json({ success: false, error: sanitizeError(e) });
+    }
   }
 }
