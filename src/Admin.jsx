@@ -402,7 +402,7 @@ export default function Admin() {
     try {
       const res = await fetch("/api/settings", {
         method: "POST", headers: authHeaders(),
-        body: JSON.stringify({ siteName, siteSlogan, siteWhatsapp: wapp }),
+        body: JSON.stringify({ siteName, siteSlogan: slogan, siteWhatsapp: wapp }),
       });
       if (!res.ok) throw new Error("HTTP " + res.status);
       log("تعديل الإعدادات"); toast_("⚙️ تم حفظ الإعدادات");
