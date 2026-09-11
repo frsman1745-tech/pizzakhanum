@@ -7,7 +7,7 @@ const ALLOWED_FIELDS = [
   "label", "type", "menuSection", "details", "desc",
   "comingSoon", "imageUrl", "flavorImageUrl",
   "priceOld", "priceNew", "numericPrice",
-  "sizes", "khanamSizes", "extras", "sliceCount", "cols", "sortOrder",
+  "sizes", "khanamSizes", "extras", "sliceCount", "cols", "sortOrder", "sections",
 ];
 
 function sanitizeBody(body) {

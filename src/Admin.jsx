@@ -387,9 +387,20 @@ export default function Admin() {
     r.onload = async ev => {
       try {
         const p = JSON.parse(ev.target.result);
-        const items = [...(p.menu||[]),...(p.featured||[])];
+        const hdrs = authHeaders();
         let c = 0;
-        const hdrs=authHeaders();
+        // أولاً: استيراد ملف الأقسام (الإصدار القديم = type:section / الإصدار الجديد = بدون)
+        const secData = p.sections;
+        if (secData && secData.length > 0) {
+          const existing = await fetch("/api/pizzas?category=section", { headers: hdrs }).then(r=>r.json());
+          const secDoc = (existing.data||[])[0];
+          const payload = { label:"__sections__", type:"section", sections: secData.map((s,i)=>({...s,sortOrder:i})) };
+          if (secDoc) { await fetch(`/api/pizzas/${secDoc.id}`,{method:"PUT",headers:hdrs,body:JSON.stringify(payload)}); }
+          else { await fetch("/api/pizzas",{method:"POST",headers:hdrs,body:JSON.stringify(payload)}); }
+          c++;
+        }
+        // بعدها: الأصناف مع مجموعاتها
+        const items = [...(p.menu||[]),...(p.featured||[])];
         for (const item of items) { const res=await fetch("/api/pizzas",{method:"POST",headers:hdrs,body:JSON.stringify(item)}); if(res.ok)c++; }
         toast_(`📥 تم استيراد ${c} صنف`); log("استيراد"); setTick(t=>t+1);
       } catch { toast_("⚠ ملف غير صالح","err"); }
