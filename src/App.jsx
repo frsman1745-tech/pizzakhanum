@@ -13,7 +13,7 @@ import { translateFullData } from "./lib/translate.js";
 const DEFAULT_FEATURED = [
   { id:"meter",      label:"بيتزا المتر",  priceOld:"150,000",priceNew:"1,500",numericPrice:150000,sliceCount:8,cols:4,desc:"متر كامل من الشهية المتنوعة",imageUrl:"",flavorImageUrl:"",extras:[] },
   { id:"sixtyforty", label:"بيتزا 60×40", priceOld:"140,000",priceNew:"1,400",numericPrice:140000,sliceCount:6,cols:3,desc:"الحجم العائلي المثالي",imageUrl:"",flavorImageUrl:"",extras:[] },
-  { id:"khanum",     label:"بيتزا خانم",  priceOld:null,priceNew:null,desc:"كرات العجين محشية بجبنة الشيدر على الأطراف ✨",
+  { id:"khanum",     label:"بيتزا",  priceOld:null,priceNew:null,desc:"كرات العجين محشية بجبنة الشيدر على الأطراف ✨",
     sizes:[{id:"sm",label:"صغيرة",priceOld:"45,000",priceNew:"450",numericPrice:45000},{id:"lg",label:"كبيرة",priceOld:"60,000",priceNew:"600",numericPrice:60000}],imageUrl:"",flavorImageUrl:"",extras:[] },
 ];
 const DEFAULT_MENU = [
@@ -36,7 +36,7 @@ const DEFAULT_SECTIONS = [
 const BRANCH = {
   lat:  35.1318,
   lng:  36.7580,
-  name: "بيتزا خانم — حماة",
+  name: "بيتزا — حماة",
   googleMaps: "https://maps.app.goo.gl/P5b4Ba5nxhZJQv967?g_st=ic",
 };
 
@@ -104,7 +104,7 @@ export default function PizzaKhanum() {
 
   const [siteName, setSiteName] = useState(() => {
     try { const v = localStorage.getItem("site_name"); return v ? JSON.parse(v) : null; } catch {}
-    return "بيتزا خانم";
+    return "بيتزا";
   });
   const [slogan, setSlogan] = useState(() => {
     try { const v = localStorage.getItem("site_slogan"); return v ? JSON.parse(v) : null; } catch {}
@@ -223,7 +223,7 @@ export default function PizzaKhanum() {
     const eExtra=extrasTotal(builderPizza,builderExtras);
     const eSummary=extrasSummary(builderPizza,builderExtras);
     const details=[lang==="ar"?`المنتصف: ${f?.label} • الأطراف: جبنة شيدر`:`Center: ${f?.label} • Edges: Cheddar`,eSummary].filter(Boolean).join(" · ");
-    addToCart({label:`${lang==="ar"?"بيتزا خانم":"Pizza Khanum"} — ${khanamSize.label}`,size:khanamSize.label,details,priceOld:khanamSize.priceOld,priceNew:khanamSize.priceNew,numericPrice:getNum(khanamSize)+eExtra});
+    addToCart({label:`${lang==="ar"?"بيتزا":"Pizza"} — ${khanamSize.label}`,size:khanamSize.label,details,priceOld:khanamSize.priceOld,priceNew:khanamSize.priceNew,numericPrice:getNum(khanamSize)+eExtra});
     setKhanamSize(null);setBuilderExtras({});setScreen("menu");
   }
 
@@ -251,8 +251,8 @@ export default function PizzaKhanum() {
     const isEn = lang === "en";
     const lines=cart.map(i=>`• ${i.label}${i.size?` (${i.size})`:""} × ${i.qty}\n  ${i.details}\n  ${isEn?"Price":`السعر`}: ${i.priceOld||fmt(i.numericPrice)} SYP`).join("\n\n");
     const msg=isEn
-      ? [`Hello Pizza Khanum 🍕`,"",`📋 Order:`,lines,"",`💰 Total: ${fmt(cartTotal)} SYP`,`🚗 ${deliveryType==="pickup"?"Pickup from branch":"Delivery"}`,deliveryType==="delivery"?`📍 ${locationTxt}${mapCoords?`\n🗺 https://www.google.com/maps?q=${mapCoords.lat},${mapCoords.lng}`:""}`:""," ",`📞 ${phone}`]
-      : ["مرحباً بيتزا خانم 🍕","","📋 الطلب:",lines,"",`💰 المجموع: ${fmt(cartTotal)} ل.س`,`🚗 ${deliveryType==="pickup"?"استلام من الفرع":"توصيل"}`,deliveryType==="delivery"?`📍 ${locationTxt}${mapCoords?`\n🗺 https://www.google.com/maps?q=${mapCoords.lat},${mapCoords.lng}`:""}`:""," ",`📞 ${phone}`];
+      ? [`Hello Pizza 🍕`,"",`📋 Order:`,lines,"",`💰 Total: ${fmt(cartTotal)} SYP`,`🚗 ${deliveryType==="pickup"?"Pickup from branch":"Delivery"}`,deliveryType==="delivery"?`📍 ${locationTxt}${mapCoords?`\n🗺 https://www.google.com/maps?q=${mapCoords.lat},${mapCoords.lng}`:""}`:""," ",`📞 ${phone}`]
+      : ["مرحباً بيتزا 🍕","","📋 الطلب:",lines,"",`💰 المجموع: ${fmt(cartTotal)} ل.س`,`🚗 ${deliveryType==="pickup"?"استلام من الفرع":"توصيل"}`,deliveryType==="delivery"?`📍 ${locationTxt}${mapCoords?`\n🗺 https://www.google.com/maps?q=${mapCoords.lat},${mapCoords.lng}`:""}`:""," ",`📞 ${phone}`];
     window.open(`https://wa.me/${wappNum}?text=${encodeURIComponent(msg.filter(Boolean).join("\n"))}`,`_blank`);
   }
 

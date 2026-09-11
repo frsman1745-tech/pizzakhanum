@@ -89,7 +89,7 @@ const PizzaSchema = new mongoose.Schema(
     sliceCount: { type: Number, default: 0 },
     cols:       { type: Number, default: 0 },
 
-    // ── خانم ─────────────────────────────────────────────────────────────────
+    // ── أحجام البيتزا المحشية ────────────────────────────────────────────────
     khanamSizes: { type: [SizeSchema], default: [] },
 
     // ── أقسام القائمة (category=section فقط) ─────────────────────────────────

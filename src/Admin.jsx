@@ -1,4 +1,4 @@
-// src/Admin.jsx — لوحة تحكم بيتزا خانم (النسخة النهائية)
+// src/Admin.jsx — لوحة تحكم بيتزا (النسخة النهائية)
 // ✅ Build error مُصلح — لا sub-components داخل Admin (يحل مشكلة cursor الكتابة)
 // ✅ CRUD كامل للقائمة والمميزة
 // ✅ إدارة أقسام القائمة
@@ -25,7 +25,7 @@ async function uploadToCloudinary(file) {
   const preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
   if (!cloud || !preset) throw new Error("أضف VITE_CLOUDINARY_CLOUD_NAME و VITE_CLOUDINARY_UPLOAD_PRESET في .env");
   const fd = new FormData();
-  fd.append("file", file); fd.append("upload_preset", preset); fd.append("folder", "pizza-khanum");
+  fd.append("file", file); fd.append("upload_preset", preset); fd.append("folder", "pizza");
   const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, { method:"POST", body:fd });
   if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e.error?.message||`Cloudinary ${res.status}`); }
   return (await res.json()).secure_url;
@@ -103,7 +103,7 @@ export default function Admin() {
   const [history,    setHistory]    = useState(() => lsGet("admin_history", []));
   const [dragId,     setDragId]     = useState(null);
 
-  const [siteName,   setSiteName]   = useState(() => lsGet("site_name",    "بيتزا خانم"));
+  const [siteName,   setSiteName]   = useState(() => lsGet("site_name",    "بيتزا"));
   const [slogan,     setSlogan]     = useState(() => lsGet("site_slogan",  "كُل لتعيش · وعِش لأجل البيتزا"));
   const [wapp,       setWapp]       = useState(() => lsGet("site_whatsapp","963998950904"));
 
@@ -377,7 +377,7 @@ export default function Admin() {
 
   function exportData() {
     const d = JSON.stringify({menu,featured,sections,exportedAt:new Date().toISOString()},null,2);
-    const a = Object.assign(document.createElement("a"),{href:URL.createObjectURL(new Blob([d],{type:"application/json"})),download:"pizzakhanum-backup.json"});
+    const a = Object.assign(document.createElement("a"),{href:URL.createObjectURL(new Blob([d],{type:"application/json"})),download:"pizza-backup.json"});
     a.click(); toast_("📦 تم التصدير");
   }
 
@@ -436,7 +436,7 @@ export default function Admin() {
       <style>{CSS}</style>
       <div className="au" style={{background:"#141414",border:"1px solid #C8A96A1a",borderRadius:20,padding:"34px 28px",width:"min(340px,95vw)",textAlign:"center"}}>
         <div style={{fontSize:"2.8rem",marginBottom:10}}>🍕</div>
-        <h1 style={{color:"#C8A96A",fontSize:"1.1rem",marginBottom:4}}>بيتزا خانم</h1>
+        <h1 style={{color:"#C8A96A",fontSize:"1.1rem",marginBottom:4}}>بيتزا</h1>
         <p style={{fontSize:".68rem",color:"#333",marginBottom:22}}>لوحة التحكم</p>
         {authErr && <div style={{background:"#1a0808",border:"1px solid #ef444422",borderRadius:9,padding:"8px 12px",marginBottom:14,fontSize:".78rem",color:"#ef4444"}}>⚠ {authErr}</div>}
         <form onSubmit={login}>
@@ -590,7 +590,7 @@ export default function Admin() {
               {[
                 {v:"fixed",   l:"💲 ثمن ثابت"},
                 {v:"builder", l:"🍕 Builder (شرائح)"},
-                {v:"khanum",  l:"👑 بيتزا خانم"},
+                {v:"khanum",  l:"👑 بيتزا"},
               ].map(o => (
                 <button key={o.v} className={`chip${
                   (o.v==="fixed"   && !form.sliceCount && !(form._khanamSizes||[]).length) ||
@@ -655,11 +655,11 @@ export default function Admin() {
               </>
             )}
 
-            {/* خانم — أحجام */}
+            {/* البيتزا المحشية — أحجام */}
             {(form._khanamSizes||[]).length > 0 && (
               <div style={{marginTop:14,background:"#0f0f0f",border:"1px solid #1a1a1a",borderRadius:13,padding:13}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:9}}>
-                  <span style={{fontSize:".72rem",fontWeight:700,color:"#C8A96A"}}>👑 أحجام بيتزا خانم</span>
+                  <span style={{fontSize:".72rem",fontWeight:700,color:"#C8A96A"}}>👑 أحجام بيتزا</span>
                   <button className="ib" style={{color:"#4CAF50",borderColor:"#4CAF5022",background:"#0d1a0d",fontSize:".72rem"}} onClick={()=>addSize("_khanamSizes")}>+ حجم</button>
                 </div>
                 {(form._khanamSizes||[]).map((sz,si) => (
@@ -683,7 +683,7 @@ export default function Admin() {
             )}
             {!(form._khanamSizes||[]).length && !form.sliceCount && (
               <button onClick={()=>addSize("_khanamSizes")} style={{marginTop:8,width:"100%",padding:"7px",background:"#111",border:"1px dashed #1e1e1e",borderRadius:9,color:"#2a2a2a",cursor:"pointer",fontFamily:"inherit",fontSize:".7rem"}}>
-                + إضافة أحجام خانم
+                + إضافة أحجام بيتزا
               </button>
             )}
           </>
@@ -776,7 +776,7 @@ export default function Admin() {
       <div style={{background:"#111",borderBottom:"1px solid #161616",padding:"11px 15px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <span style={{fontSize:"1.3rem"}}>🍕</span>
-          <div><h1 style={{fontSize:".88rem",fontWeight:900,color:"#C8A96A"}}>بيتزا خانم</h1><p style={{fontSize:".55rem",color:"#252525"}}>لوحة التحكم</p></div>
+          <div><h1 style={{fontSize:".88rem",fontWeight:900,color:"#C8A96A"}}>بيتزا</h1><p style={{fontSize:".55rem",color:"#252525"}}>لوحة التحكم</p></div>
         </div>
         <div style={{display:"flex",gap:5}}>
           <button className="ib" onClick={exportData} title="تصدير">📦</button>
@@ -898,7 +898,7 @@ export default function Admin() {
                     <div style={{display:"flex",alignItems:"center",gap:4,marginBottom:3,flexWrap:"wrap"}}>
                       <span style={{fontWeight:700,color:"#E5D3B3",fontSize:".83rem"}}>{item.label}</span>
                       {item.sliceCount>0 && <span className="badge boo">🍕 {item.sliceCount} شريحة</span>}
-                      {(item.sizes||[]).length>0&&!item.sliceCount && <span className="badge boo">👑 خانم</span>}
+                      {(item.sizes||[]).length>0&&!item.sliceCount && <span className="badge boo">👑 بيتزا</span>}
                       {item.priceOld && <span className="badge boo">{item.priceOld} ل.س</span>}
                       {(item.extras||[]).length>0 && <span className="badge bbb">{(item.extras||[]).length} إضافة</span>}
                     </div>
