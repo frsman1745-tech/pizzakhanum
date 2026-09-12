@@ -18,14 +18,14 @@ createRoot(document.getElementById("root")).render(
             <Route path="/admin/*" element={
               <Suspense fallback={
                 <div style={{
-                  minHeight: "100vh", background: "#0a0a0a",
+                  minHeight: "100vh", background: "var(--bg-page)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  flexDirection: "column", gap: 12, color: "#C8A96A",
-                  fontFamily: "'Noto Kufi Arabic',sans-serif"
+                  flexDirection: "column", gap: 12, color: "var(--text-gold)",
+                  fontFamily: "var(--ff)"
                 }}>
                   <div style={{
                     width: 30, height: 30,
-                    border: "3px solid #C8A96A22", borderTopColor: "#C8A96A",
+                    border: "3px solid var(--gold-22)", borderTopColor: "var(--text-gold)",
                     borderRadius: "50%", animation: "spin .7s linear infinite"
                   }} />
                   <p style={{ fontSize: ".82rem", opacity: .5 }}>Loading Admin...</p>

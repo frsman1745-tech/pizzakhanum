@@ -95,7 +95,7 @@ export default function DeliveryMap({ onSelect, lang = "ar" }) {
       </div>
       <div ref={divRef} style={{
         width: "100%", height: 230, borderRadius: 13,
-        border: "1px solid var(--border-gold)", overflow: "hidden",
+        border: "1px solid var(--map-green)", overflow: "hidden",
         background: "var(--bg-card)", marginBottom: 8
       }}>
         {!ready && (

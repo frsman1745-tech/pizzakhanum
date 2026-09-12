@@ -44,7 +44,7 @@ const CSS = `
   .bgg { background:var(--bg-green); color:var(--text-green); border:1px solid var(--border-green); }
   .brr { background:var(--bg-red); color:var(--text-red); border:1px solid var(--border-red); }
   .boo { background:var(--bg-gold-dim); color:var(--text-gold); border:1px solid var(--gold-2a); }
-  .bbb { background:var(--bg-blue); color:#4DA6FF; border:1px solid #4DA6FF22; }
+  .bbb { background:var(--bg-gold-dim); color:var(--text-gold); border:1px solid var(--border-gold); }
   .row  { background:var(--bg-card); border:1px solid var(--border-light); border-radius:12px; padding:10px 11px; display:flex; align-items:center; gap:9px; margin-bottom:7px; transition:border-color .18s; }
   .row:hover { border-color:var(--gold-1a); }
   .row.dragging { border-color:var(--gold-44); opacity:.7; }
@@ -432,13 +432,13 @@ export default function Admin() {
      ══ LOGIN ══
   ════════════════════════════════════════════════════════════════════════ */
   if (!authed) return (
-    <div style={{minHeight:"100vh",background:"radial-gradient(ellipse at 30% 40%,#1f1508,#0a0a0a)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Noto Kufi Arabic',sans-serif",direction:"rtl"}}>
+    <div style={{minHeight:"100vh",background:"radial-gradient(ellipse at 30% 40%,#1E1815,#151211)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--ff)",direction:"rtl"}}>
       <style>{CSS}</style>
-      <div className="au" style={{background:"#141414",border:"1px solid #C8A96A1a",borderRadius:20,padding:"34px 28px",width:"min(340px,95vw)",textAlign:"center"}}>
+      <div className="au" style={{background:"var(--bg-card)",border:"1px solid var(--border-gold)",borderRadius:20,padding:"34px 28px",width:"min(340px,95vw)",textAlign:"center"}}>
         <div style={{fontSize:"2.8rem",marginBottom:10}}>🍕</div>
-        <h1 style={{color:"#C8A96A",fontSize:"1.1rem",marginBottom:4}}>بيتزا</h1>
-        <p style={{fontSize:".68rem",color:"#333",marginBottom:22}}>لوحة التحكم</p>
-        {authErr && <div style={{background:"#1a0808",border:"1px solid #ef444422",borderRadius:9,padding:"8px 12px",marginBottom:14,fontSize:".78rem",color:"#ef4444"}}>⚠ {authErr}</div>}
+        <h1 style={{color:"var(--text-gold)",fontSize:"1.1rem",marginBottom:4}}>بيتزا</h1>
+        <p style={{fontSize:".68rem",color:"var(--text-secondary)",marginBottom:22}}>لوحة التحكم</p>
+        {authErr && <div style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",borderRadius:9,padding:"8px 12px",marginBottom:14,fontSize:".78rem",color:"var(--text-red)"}}>⚠ {authErr}</div>}
         <form onSubmit={login}>
           <input type="password" placeholder="كلمة المرور" value={pass} onChange={e=>setPass(e.target.value)} className="ai" required style={{marginBottom:12}}/>
           <button type="submit" className="bp" style={{width:"100%",padding:"11px"}}>دخول →</button>
@@ -454,7 +454,7 @@ export default function Admin() {
     <div className="mbg" style={{zIndex:1100,alignItems:"center"}} onClick={e=>{if(e.target===e.currentTarget)setConfirmDlg(null);}}>
       <div className="mbox-c apu">
         <p style={{fontSize:"1.6rem",marginBottom:10}}>🗑</p>
-        <p style={{color:"#E5D3B3",fontSize:".86rem",marginBottom:20,lineHeight:1.6}}>{confirmDlg.msg}</p>
+        <p style={{color:"var(--text-primary)",fontSize:".86rem",marginBottom:20,lineHeight:1.6}}>{confirmDlg.msg}</p>
         <div style={{display:"flex",gap:10,justifyContent:"center"}}>
           <button className="bd" style={{padding:"10px 20px",fontWeight:700}} onClick={()=>{confirmDlg.onOk();setConfirmDlg(null);}}>تأكيد الحذف</button>
           <button className="bg_" onClick={()=>setConfirmDlg(null)}>إلغاء</button>
@@ -467,10 +467,10 @@ export default function Admin() {
     <div className="mbg" style={{zIndex:1050}} onClick={e=>{if(e.target===e.currentTarget&&!savingSec)setSecModal(false);}}>
       <div className="mbox au">
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-          <h2 style={{color:"#C8A96A",fontSize:".93rem"}}>📂 إدارة أقسام القائمة</h2>
-          <button onClick={()=>setSecModal(false)} style={{background:"none",border:"none",color:"#444",cursor:"pointer",fontSize:"1.3rem",lineHeight:1}}>×</button>
+          <h2 style={{color:"var(--text-gold)",fontSize:".93rem"}}>📂 إدارة أقسام القائمة</h2>
+          <button onClick={()=>setSecModal(false)} style={{background:"none",border:"none",color:"var(--text-soft)",cursor:"pointer",fontSize:"1.3rem",lineHeight:1}}>×</button>
         </div>
-        <p style={{fontSize:".66rem",color:"#555",marginBottom:13,lineHeight:1.6}}>كل قسم يظهر كتبويب في قائمة الزبون. الزبون يضغط عليه فينتقل للقسم.</p>
+        <p style={{fontSize:".66rem",color:"var(--text-soft)",marginBottom:13,lineHeight:1.6}}>كل قسم يظهر كتبويب في قائمة الزبون. الزبون يضغط عليه فينتقل للقسم.</p>
         {secForm.map((s,si) => (
           <div key={s.id} className="sec-card">
             <span className="handle">⠿</span>
@@ -479,11 +479,11 @@ export default function Admin() {
             <div style={{display:"flex",gap:3}}>
               <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movSec(s.id,-1)} disabled={si===0}>▲</button>
               <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movSec(s.id,+1)} disabled={si===secForm.length-1}>▼</button>
-              <button className="ib" style={{background:"#1a0808",border:"1px solid #ef444422",color:"#ef4444",padding:"3px 6px"}} onClick={()=>remSec(s.id)}>🗑</button>
+              <button className="ib" style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-red)",padding:"3px 6px"}} onClick={()=>remSec(s.id)}>🗑</button>
             </div>
           </div>
         ))}
-        <button onClick={addSec} style={{width:"100%",padding:"8px",background:"#111",border:"1px dashed #1e1e1e",borderRadius:9,color:"#2a2a2a",cursor:"pointer",fontFamily:"inherit",fontSize:".72rem",marginTop:4,marginBottom:16}}>+ إضافة قسم</button>
+        <button onClick={addSec} style={{width:"100%",padding:"8px",background:"var(--bg-elevated)",border:"1px dashed var(--border)",borderRadius:9,color:"var(--text-soft)",cursor:"pointer",fontFamily:"inherit",fontSize:".72rem",marginTop:4,marginBottom:16}}>+ إضافة قسم</button>
         <div style={{display:"flex",gap:9}}>
           <button className="bp" style={{flex:1}} onClick={saveSections} disabled={savingSec}>{savingSec?"جاري الحفظ...":"💾 حفظ الأقسام"}</button>
           <button className="bg_" onClick={()=>setSecModal(false)}>إلغاء</button>
@@ -504,8 +504,8 @@ export default function Admin() {
 
         {/* Header */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-          <h2 style={{color:"#C8A96A",fontSize:".93rem"}}>{editing.isNew?(isFeat?"✨ إضافة عرض مميز":"✨ إضافة صنف"):`✏️ ${form.label||"تعديل"}`}</h2>
-          <button onClick={()=>{if(!saving)setEditing(null);}} style={{background:"none",border:"none",color:"#444",cursor:"pointer",fontSize:"1.3rem",lineHeight:1}}>×</button>
+          <h2 style={{color:"var(--text-gold)",fontSize:".93rem"}}>{editing.isNew?(isFeat?"✨ إضافة عرض مميز":"✨ إضافة صنف"):`✏️ ${form.label||"تعديل"}`}</h2>
+          <button onClick={()=>{if(!saving)setEditing(null);}} style={{background:"none",border:"none",color:"var(--text-soft)",cursor:"pointer",fontSize:"1.3rem",lineHeight:1}}>×</button>
         </div>
 
         {/* ─── الصور ─── */}
@@ -516,15 +516,15 @@ export default function Admin() {
             ...(!isFeat?[{which:"f",ref:fRef,img:imgF,setI:setImgF,upl:uplF,label:"🎨 صورة النكهة"}]:[]),
           ].map(({which,ref,img,setI,upl,label}) => (
             <div key={which}>
-              <p style={{fontSize:".62rem",color:"#555",marginBottom:3}}>{label}</p>
+              <p style={{fontSize:".62rem",color:"var(--text-soft)",marginBottom:3}}>{label}</p>
               <div className="imgzone" onClick={()=>!upl&&ref.current.click()}>
                 {img && <img src={img} alt=""/>}
-                <div className="ov"><span style={{fontSize:"1.2rem"}}>📷</span><span style={{fontSize:".62rem",color:"#ccc",marginTop:3}}>تغيير</span></div>
-                {!img && <><span style={{fontSize:"1.5rem",opacity:.2}}>🖼</span><span style={{fontSize:".65rem",color:"#2a2a2a",marginTop:4}}>اضغط للرفع</span></>}
-                {upl && <div className="upl-ov"><div className="spin16"/><span style={{fontSize:".66rem",color:"#C8A96A"}}>جاري الرفع...</span></div>}
+                <div className="ov"><span style={{fontSize:"1.2rem"}}>📷</span><span style={{fontSize:".62rem",color:"var(--text-secondary)",marginTop:3}}>تغيير</span></div>
+                {!img && <><span style={{fontSize:"1.5rem",opacity:.2}}>🖼</span><span style={{fontSize:".65rem",color:"var(--text-soft)",marginTop:4}}>اضغط للرفع</span></>}
+                {upl && <div className="upl-ov"><div className="spin16"/><span style={{fontSize:".66rem",color:"var(--text-gold)"}}>جاري الرفع...</span></div>}
               </div>
               <input ref={ref} type="file" accept="image/*" style={{display:"none"}} onChange={e=>handleImg(e.target.files[0],which)}/>
-              {img && <button style={{fontSize:".6rem",color:"#6a2a2a",background:"none",border:"none",cursor:"pointer",marginTop:3,fontFamily:"inherit"}} onClick={()=>setI(null)}>× حذف</button>}
+              {img && <button style={{fontSize:".6rem",color:"var(--text-dark-red)",background:"none",border:"none",cursor:"pointer",marginTop:3,fontFamily:"inherit"}} onClick={()=>setI(null)}>× حذف</button>}
             </div>
           ))}
         </div>
@@ -552,26 +552,26 @@ export default function Admin() {
             </div>
 
             {/* الأحجام */}
-            <div style={{marginTop:14,background:"#0f0f0f",border:"1px solid #1a1a1a",borderRadius:13,padding:13}}>
+            <div style={{marginTop:14,background:"var(--bg-card-alt)",border:"1px solid var(--border-card)",borderRadius:13,padding:13}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:9}}>
-                <span style={{fontSize:".72rem",fontWeight:700,color:"#C8A96A"}}>📏 الأحجام والأسعار</span>
-                <button className="ib" style={{color:"#4CAF50",borderColor:"#4CAF5022",background:"#0d1a0d",fontSize:".72rem"}} onClick={()=>addSize("_sizes")}>+ إضافة حجم</button>
+                <span style={{fontSize:".72rem",fontWeight:700,color:"var(--text-gold)"}}>📏 الأحجام والأسعار</span>
+                <button className="ib" style={{color:"var(--text-green)",borderColor:"var(--border-green)",background:"var(--bg-green)",fontSize:".72rem"}} onClick={()=>addSize("_sizes")}>+ إضافة حجم</button>
               </div>
-              {!(form._sizes||[]).length && <p style={{fontSize:".68rem",color:"#252525",textAlign:"center",padding:"7px 0"}}>لا توجد أحجام</p>}
+              {!(form._sizes||[]).length && <p style={{fontSize:".68rem",color:"var(--text-muted)",textAlign:"center",padding:"7px 0"}}>لا توجد أحجام</p>}
               {(form._sizes||[]).map((sz,si) => (
-                <div key={sz.id} style={{background:"#141414",border:"1px solid #1e1e1e",borderRadius:10,padding:"9px 10px",marginBottom:7}}>
+                <div key={sz.id} style={{background:"var(--bg-card)",border:"1px solid var(--border)",borderRadius:10,padding:"9px 10px",marginBottom:7}}>
                   <div style={{display:"flex",gap:7,marginBottom:7,alignItems:"center"}}>
                     <span className="handle">⠿</span>
                     <input className="ai sm" style={{flex:1}} value={sz.label} onChange={e=>updSize(sz.id,"label",e.target.value,"_sizes")} placeholder="صغير / وسط / كبير"/>
                     <div style={{display:"flex",gap:3}}>
                       <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movSize(sz.id,-1,"_sizes")} disabled={si===0}>▲</button>
                       <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movSize(sz.id,+1,"_sizes")} disabled={si===(form._sizes||[]).length-1}>▼</button>
-                      <button className="ib" style={{background:"#1a0808",border:"1px solid #ef444422",color:"#ef4444",padding:"3px 6px"}} onClick={()=>remSize(sz.id,"_sizes")}>🗑</button>
+                      <button className="ib" style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-red)",padding:"3px 6px"}} onClick={()=>remSize(sz.id,"_sizes")}>🗑</button>
                     </div>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                    <div><p style={{fontSize:".58rem",color:"#333",marginBottom:3}}>ل.س القديمة</p><input className="ai sm" value={sz.priceOld} onChange={e=>updSize(sz.id,"priceOld",e.target.value,"_sizes")} placeholder="35،000"/></div>
-                    <div><p style={{fontSize:".58rem",color:"#333",marginBottom:3}}>ل.ج الجديدة</p><input className="ai sm" value={sz.priceNew} onChange={e=>updSize(sz.id,"priceNew",e.target.value,"_sizes")} placeholder="350"/></div>
+                    <div><p style={{fontSize:".58rem",color:"var(--text-soft)",marginBottom:3}}>ل.س القديمة</p><input className="ai sm" value={sz.priceOld} onChange={e=>updSize(sz.id,"priceOld",e.target.value,"_sizes")} placeholder="35،000"/></div>
+                    <div><p style={{fontSize:".58rem",color:"var(--text-soft)",marginBottom:3}}>ل.ج الجديدة</p><input className="ai sm" value={sz.priceNew} onChange={e=>updSize(sz.id,"priceNew",e.target.value,"_sizes")} placeholder="350"/></div>
                   </div>
                 </div>
               ))}
@@ -611,7 +611,7 @@ export default function Admin() {
             {!form.sliceCount && !(form._khanamSizes||[]).length && (
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:10}}>
                 {[["priceOld","السعر ل.س","150،000"],["priceNew","السعر ل.ج","1،500"]].map(([k,l,ph]) => (
-                  <div key={k}><p style={{fontSize:".6rem",color:"#333",marginBottom:3}}>{l}</p>
+                  <div key={k}><p style={{fontSize:".6rem",color:"var(--text-soft)",marginBottom:3}}>{l}</p>
                     <input className="ai sm" value={form[k]||""} onChange={e=>setForm(p=>({...p,[k]:e.target.value}))} placeholder={ph}/>
                   </div>
                 ))}
@@ -624,30 +624,30 @@ export default function Admin() {
                 <span className="sl">إعداد الشبكة</span>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:6}}>
                   <div>
-                    <p style={{fontSize:".6rem",color:"#333",marginBottom:3}}>عدد الشرائح</p>
+                    <p style={{fontSize:".6rem",color:"var(--text-soft)",marginBottom:3}}>عدد الشرائح</p>
                     <input className="ai sm" type="number" min={1} max={24} value={form.sliceCount||8} onChange={e=>setForm(p=>({...p,sliceCount:Number(e.target.value)}))}/>
-                    <p style={{fontSize:".55rem",color:"#252525",marginTop:3}}>المتر=8 · 60×40=6</p>
+                    <p style={{fontSize:".55rem",color:"var(--text-muted)",marginTop:3}}>المتر=8 · 60×40=6</p>
                   </div>
                   <div>
-                    <p style={{fontSize:".6rem",color:"#333",marginBottom:3}}>عدد الأعمدة</p>
+                    <p style={{fontSize:".6rem",color:"var(--text-soft)",marginBottom:3}}>عدد الأعمدة</p>
                     <input className="ai sm" type="number" min={1} max={8} value={form.cols||4} onChange={e=>setForm(p=>({...p,cols:Number(e.target.value)}))}/>
-                    <p style={{fontSize:".55rem",color:"#252525",marginTop:3}}>المتر=4 · 60×40=3</p>
+                    <p style={{fontSize:".55rem",color:"var(--text-muted)",marginTop:3}}>المتر=4 · 60×40=3</p>
                   </div>
                 </div>
                 {/* معاينة الشبكة */}
-                <div style={{marginTop:10,background:"#0f0f0f",borderRadius:10,padding:10,border:"1px solid #1a1a1a"}}>
-                  <p style={{fontSize:".57rem",color:"#1e1e1e",marginBottom:7,letterSpacing:"2px"}}>معاينة الشبكة</p>
+                <div style={{marginTop:10,background:"var(--bg-card-alt)",borderRadius:10,padding:10,border:"1px solid var(--border-card)"}}>
+                  <p style={{fontSize:".57rem",color:"var(--text-muted)",marginBottom:7,letterSpacing:"2px"}}>معاينة الشبكة</p>
                   <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(form.cols||4,8)},1fr)`,gap:4}}>
                     {Array.from({length:Math.min(form.sliceCount||8,24)},(_,i) => (
-                      <div key={i} style={{background:"linear-gradient(135deg,#1c0e05,#120a02)",border:"1px solid #222",borderRadius:5,height:28,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <span style={{fontSize:".48rem",color:"#333"}}>{i+1}</span>
+                      <div key={i} style={{background:"var(--gradient-card-2)",border:"1px solid var(--border)",borderRadius:5,height:28,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <span style={{fontSize:".48rem",color:"var(--text-soft)"}}>{i+1}</span>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:10}}>
                   {[["priceOld","السعر ل.س","150،000"],["priceNew","السعر ل.ج","1،500"]].map(([k,l,ph]) => (
-                    <div key={k}><p style={{fontSize:".6rem",color:"#333",marginBottom:3}}>{l}</p>
+                    <div key={k}><p style={{fontSize:".6rem",color:"var(--text-soft)",marginBottom:3}}>{l}</p>
                       <input className="ai sm" value={form[k]||""} onChange={e=>setForm(p=>({...p,[k]:e.target.value}))} placeholder={ph}/>
                     </div>
                   ))}
@@ -657,32 +657,32 @@ export default function Admin() {
 
             {/* البيتزا المحشية — أحجام */}
             {(form._khanamSizes||[]).length > 0 && (
-              <div style={{marginTop:14,background:"#0f0f0f",border:"1px solid #1a1a1a",borderRadius:13,padding:13}}>
+              <div style={{marginTop:14,background:"var(--bg-card-alt)",border:"1px solid var(--border-card)",borderRadius:13,padding:13}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:9}}>
-                  <span style={{fontSize:".72rem",fontWeight:700,color:"#C8A96A"}}>👑 أحجام بيتزا</span>
-                  <button className="ib" style={{color:"#4CAF50",borderColor:"#4CAF5022",background:"#0d1a0d",fontSize:".72rem"}} onClick={()=>addSize("_khanamSizes")}>+ حجم</button>
+                  <span style={{fontSize:".72rem",fontWeight:700,color:"var(--text-gold)"}}>👑 أحجام بيتزا</span>
+                  <button className="ib" style={{color:"var(--text-green)",borderColor:"var(--border-green)",background:"var(--bg-green)",fontSize:".72rem"}} onClick={()=>addSize("_khanamSizes")}>+ حجم</button>
                 </div>
                 {(form._khanamSizes||[]).map((sz,si) => (
-                  <div key={sz.id} style={{background:"#141414",border:"1px solid #1e1e1e",borderRadius:10,padding:"9px 10px",marginBottom:7}}>
+                  <div key={sz.id} style={{background:"var(--bg-card)",border:"1px solid var(--border)",borderRadius:10,padding:"9px 10px",marginBottom:7}}>
                     <div style={{display:"flex",gap:7,marginBottom:7,alignItems:"center"}}>
                       <span className="handle">⠿</span>
                       <input className="ai sm" style={{flex:1}} value={sz.label} onChange={e=>updSize(sz.id,"label",e.target.value,"_khanamSizes")} placeholder="صغيرة / كبيرة"/>
                       <div style={{display:"flex",gap:3}}>
                         <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movSize(sz.id,-1,"_khanamSizes")} disabled={si===0}>▲</button>
                         <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movSize(sz.id,+1,"_khanamSizes")} disabled={si===(form._khanamSizes||[]).length-1}>▼</button>
-                        <button className="ib" style={{background:"#1a0808",border:"1px solid #ef444422",color:"#ef4444",padding:"3px 6px"}} onClick={()=>remSize(sz.id,"_khanamSizes")}>🗑</button>
+                        <button className="ib" style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-red)",padding:"3px 6px"}} onClick={()=>remSize(sz.id,"_khanamSizes")}>🗑</button>
                       </div>
                     </div>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                      <div><p style={{fontSize:".58rem",color:"#333",marginBottom:3}}>ل.س القديمة</p><input className="ai sm" value={sz.priceOld} onChange={e=>updSize(sz.id,"priceOld",e.target.value,"_khanamSizes")} placeholder="45،000"/></div>
-                      <div><p style={{fontSize:".58rem",color:"#333",marginBottom:3}}>ل.ج الجديدة</p><input className="ai sm" value={sz.priceNew} onChange={e=>updSize(sz.id,"priceNew",e.target.value,"_khanamSizes")} placeholder="450"/></div>
+                      <div><p style={{fontSize:".58rem",color:"var(--text-soft)",marginBottom:3}}>ل.س القديمة</p><input className="ai sm" value={sz.priceOld} onChange={e=>updSize(sz.id,"priceOld",e.target.value,"_khanamSizes")} placeholder="45،000"/></div>
+                      <div><p style={{fontSize:".58rem",color:"var(--text-soft)",marginBottom:3}}>ل.ج الجديدة</p><input className="ai sm" value={sz.priceNew} onChange={e=>updSize(sz.id,"priceNew",e.target.value,"_khanamSizes")} placeholder="450"/></div>
                     </div>
                   </div>
                 ))}
               </div>
             )}
             {!(form._khanamSizes||[]).length && !form.sliceCount && (
-              <button onClick={()=>addSize("_khanamSizes")} style={{marginTop:8,width:"100%",padding:"7px",background:"#111",border:"1px dashed #1e1e1e",borderRadius:9,color:"#2a2a2a",cursor:"pointer",fontFamily:"inherit",fontSize:".7rem"}}>
+              <button onClick={()=>addSize("_khanamSizes")} style={{marginTop:8,width:"100%",padding:"7px",background:"var(--bg-elevated)",border:"1px dashed var(--border)",borderRadius:9,color:"var(--text-soft)",cursor:"pointer",fontFamily:"inherit",fontSize:".7rem"}}>
                 + إضافة أحجام بيتزا
               </button>
             )}
@@ -690,13 +690,13 @@ export default function Admin() {
         )}
 
         {/* ══ الإضافات (للقائمة والمميزة) ══ */}
-        <div style={{marginTop:12,background:"#0f0f0f",border:"1px solid #1a1a1a",borderRadius:13,padding:13}}>
+        <div style={{marginTop:12,background:"var(--bg-card-alt)",border:"1px solid var(--border-card)",borderRadius:13,padding:13}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
-            <span style={{fontSize:".72rem",fontWeight:700,color:"#C8A96A"}}>🧩 مجموعات الإضافات</span>
-            <button className="ib" style={{color:"#4DA6FF",borderColor:"#4DA6FF22",background:"#06111f",fontSize:".72rem"}} onClick={addExtraGroup}>+ إضافة مجموعة</button>
+            <span style={{fontSize:".72rem",fontWeight:700,color:"var(--text-gold)"}}>🧩 مجموعات الإضافات</span>
+            <button className="ib" style={{color:"var(--text-gold)",borderColor:"var(--border-gold)",background:"var(--bg-gold-dim)",fontSize:".72rem"}} onClick={addExtraGroup}>+ إضافة مجموعة</button>
           </div>
-          <p style={{fontSize:".61rem",color:"#252525",marginBottom:8}}>مثال: العجينة (اختيار واحد) · الجبن الإضافي (متعدد)</p>
-          {!(form.extras||[]).length && <p style={{fontSize:".68rem",color:"#1e1e1e",textAlign:"center",padding:"7px 0"}}>لا توجد مجموعات</p>}
+          <p style={{fontSize:".61rem",color:"var(--text-muted)",marginBottom:8}}>مثال: العجينة (اختيار واحد) · الجبن الإضافي (متعدد)</p>
+          {!(form.extras||[]).length && <p style={{fontSize:".68rem",color:"var(--text-muted)",textAlign:"center",padding:"7px 0"}}>لا توجد مجموعات</p>}
           {(form.extras||[]).map((g,gi) => (
             <div key={g.id} className="eg">
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
@@ -709,11 +709,11 @@ export default function Admin() {
                 <div style={{display:"flex",gap:3}}>
                   <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movGroup(g.id,-1)} disabled={gi===0}>▲</button>
                   <button className="ib" style={{padding:"3px 6px",fontSize:".6rem"}} onClick={()=>movGroup(g.id,+1)} disabled={gi===(form.extras||[]).length-1}>▼</button>
-                  <button className="ib" style={{background:"#1a0808",border:"1px solid #ef444422",color:"#ef4444",padding:"3px 6px"}} onClick={()=>remExtraGroup(g.id)}>🗑</button>
+                  <button className="ib" style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-red)",padding:"3px 6px"}} onClick={()=>remExtraGroup(g.id)}>🗑</button>
                 </div>
               </div>
-              <label style={{display:"flex",alignItems:"center",gap:7,fontSize:".68rem",color:"#555",cursor:"pointer",marginBottom:8}}>
-                <input type="checkbox" checked={g.required||false} onChange={e=>updGroup(g.id,"required",e.target.checked)} style={{accentColor:"#C8A96A"}}/>
+              <label style={{display:"flex",alignItems:"center",gap:7,fontSize:".68rem",color:"var(--text-soft)",cursor:"pointer",marginBottom:8}}>
+                <input type="checkbox" checked={g.required||false} onChange={e=>updGroup(g.id,"required",e.target.checked)} style={{accentColor:"var(--text-gold)"}}/>
                 إلزامي
               </label>
               {(g.options||[]).map((opt,oi) => (
@@ -726,10 +726,10 @@ export default function Admin() {
                     <button className="ib" style={{padding:"2px 5px",fontSize:".55rem"}} onClick={()=>movOption(g.id,opt.id,-1)} disabled={oi===0}>▲</button>
                     <button className="ib" style={{padding:"2px 5px",fontSize:".55rem"}} onClick={()=>movOption(g.id,opt.id,+1)} disabled={oi===(g.options||[]).length-1}>▼</button>
                   </div>
-                  <button className="ib" style={{background:"#1a0808",border:"1px solid #ef444422",color:"#ef4444",padding:"3px 6px"}} onClick={()=>remOption(g.id,opt.id)}>🗑</button>
+                  <button className="ib" style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-red)",padding:"3px 6px"}} onClick={()=>remOption(g.id,opt.id)}>🗑</button>
                 </div>
               ))}
-              <button onClick={()=>addOption(g.id)} style={{width:"100%",marginTop:6,padding:"6px",background:"#111",border:"1px dashed #1e1e1e",borderRadius:8,color:"#2a2a2a",cursor:"pointer",fontFamily:"inherit",fontSize:".68rem"}}>
+              <button onClick={()=>addOption(g.id)} style={{width:"100%",marginTop:6,padding:"6px",background:"var(--bg-elevated)",border:"1px dashed var(--border)",borderRadius:8,color:"var(--text-soft)",cursor:"pointer",fontFamily:"inherit",fontSize:".68rem"}}>
                 + إضافة خيار
               </button>
             </div>
@@ -737,12 +737,12 @@ export default function Admin() {
         </div>
 
         {/* معاينة */}
-        <div style={{background:"#0f0f0f",border:"1px solid #161616",borderRadius:11,padding:12,marginTop:14,overflow:"hidden"}}>
-          <p style={{fontSize:".55rem",color:"#1a1a1a",marginBottom:7,letterSpacing:"2px"}}>معاينة مباشرة</p>
+        <div style={{background:"var(--bg-card-alt)",border:"1px solid var(--border-card)",borderRadius:11,padding:12,marginTop:14,overflow:"hidden"}}>
+          <p style={{fontSize:".55rem",color:"var(--text-muted)",marginBottom:7,letterSpacing:"2px"}}>معاينة مباشرة</p>
           {imgP && <img src={imgP} alt="" style={{width:"100%",height:84,objectFit:"cover",borderRadius:8,marginBottom:8}}/>}
-          <p style={{fontWeight:700,color:"#E5D3B3",fontSize:".85rem",marginBottom:3}}>{form.label||"—"}</p>
-          <p style={{fontSize:".67rem",color:"#444",lineHeight:1.5}}>{form.details||form.desc||"—"}</p>
-          {(form.priceOld||form.priceNew) && <p style={{fontSize:".72rem",color:"#C8A96A",marginTop:4,fontWeight:700}}>{form.priceOld} ل.س {form.priceNew&&`/ ${form.priceNew} ل.ج`}</p>}
+          <p style={{fontWeight:700,color:"var(--text-primary)",fontSize:".85rem",marginBottom:3}}>{form.label||"—"}</p>
+          <p style={{fontSize:".67rem",color:"var(--text-soft)",lineHeight:1.5}}>{form.details||form.desc||"—"}</p>
+          {(form.priceOld||form.priceNew) && <p style={{fontSize:".72rem",color:"var(--text-gold)",marginTop:4,fontWeight:700}}>{form.priceOld} ل.س {form.priceNew&&`/ ${form.priceNew} ل.ج`}</p>}
         </div>
 
         {/* أزرار */}
@@ -761,28 +761,28 @@ export default function Admin() {
      ══ DASHBOARD ══
   ════════════════════════════════════════════════════════════════════════ */
   return (
-    <div style={{minHeight:"100vh",background:"#0a0a0a",color:"#E5D3B3",fontFamily:"'Noto Kufi Arabic',sans-serif",direction:"rtl"}}>
+    <div style={{minHeight:"100vh",background:"var(--bg-page)",color:"var(--text-primary)",fontFamily:"var(--ff)",direction:"rtl"}}>
       <style>{CSS}</style>
       {ConfirmDlg}{SecModal}{EditModal}
 
       {/* Toast */}
       {toast && (
-        <div style={{position:"fixed",top:14,left:"50%",transform:"translateX(-50%)",background:toast.t==="err"?"#1a0808":toast.t==="warn"?"#1a1408":"#0d1a0d",border:`1px solid ${toast.t==="err"?"#ef4444":toast.t==="warn"?"#C8A96A":"#4CAF50"}`,borderRadius:11,padding:"9px 18px",zIndex:2000,color:toast.t==="err"?"#ef4444":toast.t==="warn"?"#C8A96A":"#4CAF50",fontSize:".79rem",fontWeight:600,whiteSpace:"nowrap",boxShadow:"0 8px 28px #00000099",animation:"toastIn .22s ease forwards"}}>
+        <div style={{position:"fixed",top:14,left:"50%",transform:"translateX(-50%)",background:toast.t==="err"?"var(--bg-dark-red)":toast.t==="warn"?"#241B12":"var(--bg-green)",border:`1px solid ${toast.t==="err"?"var(--text-red)":toast.t==="warn"?"var(--text-gold)":"var(--text-green)"}`,borderRadius:11,padding:"9px 18px",zIndex:2000,color:toast.t==="err"?"var(--text-red)":toast.t==="warn"?"var(--text-gold)":"var(--text-green)",fontSize:".79rem",fontWeight:600,whiteSpace:"nowrap",boxShadow:"0 8px 28px rgba(0,0,0,.42)",animation:"toastIn .22s ease forwards"}}>
           {toast.m}
         </div>
       )}
 
       {/* Header */}
-      <div style={{background:"#111",borderBottom:"1px solid #161616",padding:"11px 15px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
+      <div style={{background:"var(--bg-page-alt)",borderBottom:"1px solid var(--border-input)",padding:"11px 15px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <span style={{fontSize:"1.3rem"}}>🍕</span>
-          <div><h1 style={{fontSize:".88rem",fontWeight:900,color:"#C8A96A"}}>بيتزا</h1><p style={{fontSize:".55rem",color:"#252525"}}>لوحة التحكم</p></div>
+          <div><h1 style={{fontSize:".88rem",fontWeight:900,color:"var(--text-gold)"}}>بيتزا</h1><p style={{fontSize:".55rem",color:"var(--text-muted)"}}>لوحة التحكم</p></div>
         </div>
         <div style={{display:"flex",gap:5}}>
           <button className="ib" onClick={exportData} title="تصدير">📦</button>
           <label className="ib" style={{cursor:"pointer"}} title="استيراد">📥<input ref={impRef} type="file" accept=".json" onChange={importData} style={{display:"none"}}/></label>
-          <button className="ib" onClick={()=>setTick(t=>t+1)} style={{color:"#C8A96A"}}>🔄</button>
-          <button className="ib" onClick={()=>{setToken(null);setAuthed(false);}} style={{background:"#1a1010",border:"1px solid #ef44441a",color:"#444"}}>خروج</button>
+          <button className="ib" onClick={()=>setTick(t=>t+1)} style={{color:"var(--text-gold)"}}>🔄</button>
+          <button className="ib" onClick={()=>{setToken(null);setAuthed(false);}} style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-soft)"}}>خروج</button>
         </div>
       </div>
 
@@ -791,15 +791,15 @@ export default function Admin() {
         {/* Stats */}
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:7,marginBottom:14}}>
           {[
-            {l:"القائمة", v:menu.length,                          c:"#C8A96A",i:"🍕"},
-            {l:"ظاهر",    v:menu.filter(p=>!p.comingSoon).length, c:"#4CAF50",i:"✅"},
-            {l:"قريباً",  v:menu.filter(p=> p.comingSoon).length, c:"#ef4444",i:"⏳"},
-            {l:"المميزة", v:featured.length,                      c:"#4DA6FF",i:"⭐"},
+            {l:"القائمة", v:menu.length,                          c:"var(--text-gold)",i:"🍕"},
+            {l:"ظاهر",    v:menu.filter(p=>!p.comingSoon).length, c:"var(--text-green)",i:"✅"},
+            {l:"قريباً",  v:menu.filter(p=> p.comingSoon).length, c:"var(--text-red)",i:"⏳"},
+            {l:"المميزة", v:featured.length,                      c:"var(--brand)",i:"⭐"},
           ].map(s => (
             <div key={s.l} className="stat">
               <div style={{fontSize:".9rem",marginBottom:2}}>{s.i}</div>
               <div style={{fontSize:"1.3rem",fontWeight:900,color:s.c}}>{s.v}</div>
-              <div style={{fontSize:".56rem",color:"#2e2e2e",marginTop:2}}>{s.l}</div>
+              <div style={{fontSize:".56rem",color:"var(--text-muted)",marginTop:2}}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -812,20 +812,20 @@ export default function Admin() {
           <div style={{marginRight:"auto",display:"flex",gap:5}}>
             {tab==="menu" && (
               <>
-                <button className="ib" onClick={openSecModal} style={{color:"#8B6B4A",fontSize:".72rem"}}>📂 أقسام</button>
-                <button className="ib" onClick={addItem} style={{background:"#0d1a0d",border:"1px solid #4CAF5022",color:"#4CAF50",fontSize:".76rem"}}>+ إضافة صنف</button>
+                <button className="ib" onClick={openSecModal} style={{color:"var(--text-secondary)",fontSize:".72rem"}}>📂 أقسام</button>
+                <button className="ib" onClick={addItem} style={{background:"var(--bg-green)",border:"1px solid var(--border-green)",color:"var(--text-green)",fontSize:".76rem"}}>+ إضافة صنف</button>
               </>
             )}
             {tab==="featured" && (
-              <button className="ib" onClick={addFeatured} style={{background:"#06111f",border:"1px solid #4DA6FF22",color:"#4DA6FF",fontSize:".76rem"}}>+ إضافة مميز</button>
+              <button className="ib" onClick={addFeatured} style={{background:"var(--bg-gold-dim)",border:"1px solid var(--border-gold)",color:"var(--text-gold)",fontSize:".76rem"}}>+ إضافة مميز</button>
             )}
           </div>
         </div>
 
         {/* Loading */}
         {loading && (
-          <div style={{textAlign:"center",padding:"32px",color:"#C8A96A44"}}>
-            <div style={{width:28,height:28,border:"3px solid #C8A96A22",borderTopColor:"#C8A96A",borderRadius:"50%",animation:"spin .7s linear infinite",margin:"0 auto 10px"}}/>
+          <div style={{textAlign:"center",padding:"32px",color:"var(--gold-44)"}}>
+            <div style={{width:28,height:28,border:"3px solid var(--gold-22)",borderTopColor:"var(--text-gold)",borderRadius:"50%",animation:"spin .7s linear infinite",margin:"0 auto 10px"}}/>
             <p style={{fontSize:".75rem"}}>جاري التحميل...</p>
           </div>
         )}
@@ -843,8 +843,8 @@ export default function Admin() {
                 })}
               </div>
             )}
-            <p style={{fontSize:".57rem",color:"#1a1a1a",marginBottom:7}}>⠿ اسحب للترتيب · ▲▼ تحريك</p>
-            {displayItems.length===0 && <div style={{textAlign:"center",padding:"26px",color:"#1e1e1e",fontSize:".8rem"}}>لا توجد نتائج</div>}
+            <p style={{fontSize:".57rem",color:"var(--text-muted)",marginBottom:7}}>⠿ اسحب للترتيب · ▲▼ تحريك</p>
+            {displayItems.length===0 && <div style={{textAlign:"center",padding:"26px",color:"var(--text-muted)",fontSize:".8rem"}}>لا توجد نتائج</div>}
             {displayItems.map(item => {
               const iid = item._id||item.id;
               const sec = sections.find(s=>s.id===item.menuSection);
@@ -855,25 +855,25 @@ export default function Admin() {
                   {item.imageUrl ? <img src={item.imageUrl} alt="" className="thumb"/> : <div className="thumbph">🍕</div>}
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:4,marginBottom:3,flexWrap:"wrap"}}>
-                      <span style={{fontWeight:700,color:"#E5D3B3",fontSize:".83rem"}}>{item.label}</span>
+                      <span style={{fontWeight:700,color:"var(--text-primary)",fontSize:".83rem"}}>{item.label}</span>
                       {item.comingSoon ? <span className="badge brr">قريباً</span> : <span className="badge bgg">ظاهر</span>}
                       {sec && <span className="badge boo">{sec.emoji} {sec.label}</span>}
                       {(item.sizes||[]).length>0  && <span className="badge boo">{(item.sizes||[]).length} حجم</span>}
                       {(item.extras||[]).length>0 && <span className="badge bbb">{(item.extras||[]).length} إضافة</span>}
                     </div>
-                    <p style={{fontSize:".63rem",color:"#222",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.details||"—"}</p>
+                    <p style={{fontSize:".63rem",color:"var(--text-muted)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.details||"—"}</p>
                   </div>
                   <div style={{display:"flex",gap:3,alignItems:"center",flexShrink:0}}>
                     <div style={{display:"flex",flexDirection:"column",gap:1}}>
-                      <button onClick={()=>moveItem("menu",iid,-1)} style={{background:"none",border:"none",color:"#2a2a2a",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▲</button>
-                      <button onClick={()=>moveItem("menu",iid,+1)} style={{background:"none",border:"none",color:"#2a2a2a",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▼</button>
+                      <button onClick={()=>moveItem("menu",iid,-1)} style={{background:"none",border:"none",color:"var(--text-soft)",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▲</button>
+                      <button onClick={()=>moveItem("menu",iid,+1)} style={{background:"none",border:"none",color:"var(--text-soft)",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▼</button>
                     </div>
-                    <button onClick={()=>toggleCS(iid)} style={{padding:"4px 7px",background:item.comingSoon?"#1a0d0d":"#0d1a0d",border:`1px solid ${item.comingSoon?"#ef444422":"#4CAF5022"}`,borderRadius:6,color:item.comingSoon?"#ef4444":"#4CAF50",cursor:"pointer",fontSize:".66rem",fontWeight:700,fontFamily:"inherit"}}>
+                    <button onClick={()=>toggleCS(iid)} style={{padding:"4px 7px",background:item.comingSoon?"var(--bg-dark-red)":"var(--bg-green)",border:`1px solid ${item.comingSoon?"var(--border-red)":"var(--border-green)"}`,borderRadius:6,color:item.comingSoon?"var(--text-red)":"var(--text-green)",cursor:"pointer",fontSize:".66rem",fontWeight:700,fontFamily:"inherit"}}>
                       {item.comingSoon?"إظهار":"إخفاء"}
                     </button>
-                    <button className="ib" onClick={()=>openEdit("menu",iid)} style={{background:"#1a1a1a",border:"1px solid #222",color:"#C8A96A"}}>✏️</button>
-                    <button className="ib" onClick={()=>dupItem("menu",iid)} style={{color:"#2e2e2e"}}>📋</button>
-                    <button className="ib" onClick={()=>deleteItem("menu",iid)} style={{background:"#1a0d0d",border:"1px solid #ef444422",color:"#ef4444"}}>🗑</button>
+                    <button className="ib" onClick={()=>openEdit("menu",iid)} style={{background:"var(--bg-card-hover)",border:"1px solid var(--border)",color:"var(--text-gold)"}}>✏️</button>
+                    <button className="ib" onClick={()=>dupItem("menu",iid)} style={{color:"var(--text-muted)"}}>📋</button>
+                    <button className="ib" onClick={()=>deleteItem("menu",iid)} style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-red)"}}>🗑</button>
                   </div>
                 </div>
               );
@@ -885,8 +885,8 @@ export default function Admin() {
         {!loading && tab==="featured" && (
           <>
             <input className="srch" placeholder="🔍  ابحث..." value={search} onChange={e=>setSearch(e.target.value)}/>
-            <p style={{fontSize:".57rem",color:"#1a1a1a",marginBottom:7}}>⠿ اسحب للترتيب · ▲▼ تحريك</p>
-            {displayItems.length===0 && <div style={{textAlign:"center",padding:"26px",color:"#1e1e1e",fontSize:".8rem"}}>لا توجد عروض مميزة</div>}
+            <p style={{fontSize:".57rem",color:"var(--text-muted)",marginBottom:7}}>⠿ اسحب للترتيب · ▲▼ تحريك</p>
+            {displayItems.length===0 && <div style={{textAlign:"center",padding:"26px",color:"var(--text-muted)",fontSize:".8rem"}}>لا توجد عروض مميزة</div>}
             {displayItems.map(item => {
               const iid = item._id||item.id;
               return (
@@ -896,22 +896,22 @@ export default function Admin() {
                   {item.imageUrl ? <img src={item.imageUrl} alt="" className="thumb"/> : <div className="thumbph">⭐</div>}
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:4,marginBottom:3,flexWrap:"wrap"}}>
-                      <span style={{fontWeight:700,color:"#E5D3B3",fontSize:".83rem"}}>{item.label}</span>
+                      <span style={{fontWeight:700,color:"var(--text-primary)",fontSize:".83rem"}}>{item.label}</span>
                       {item.sliceCount>0 && <span className="badge boo">🍕 {item.sliceCount} شريحة</span>}
                       {(item.sizes||[]).length>0&&!item.sliceCount && <span className="badge boo">👑 بيتزا</span>}
                       {item.priceOld && <span className="badge boo">{item.priceOld} ل.س</span>}
                       {(item.extras||[]).length>0 && <span className="badge bbb">{(item.extras||[]).length} إضافة</span>}
                     </div>
-                    <p style={{fontSize:".63rem",color:"#222",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.desc||"—"}</p>
+                    <p style={{fontSize:".63rem",color:"var(--text-muted)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.desc||"—"}</p>
                   </div>
                   <div style={{display:"flex",gap:3,alignItems:"center",flexShrink:0}}>
                     <div style={{display:"flex",flexDirection:"column",gap:1}}>
-                      <button onClick={()=>moveItem("featured",iid,-1)} style={{background:"none",border:"none",color:"#2a2a2a",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▲</button>
-                      <button onClick={()=>moveItem("featured",iid,+1)} style={{background:"none",border:"none",color:"#2a2a2a",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▼</button>
+                      <button onClick={()=>moveItem("featured",iid,-1)} style={{background:"none",border:"none",color:"var(--text-soft)",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▲</button>
+                      <button onClick={()=>moveItem("featured",iid,+1)} style={{background:"none",border:"none",color:"var(--text-soft)",cursor:"pointer",fontSize:".65rem",lineHeight:1,padding:"2px 4px"}}>▼</button>
                     </div>
-                    <button className="ib" onClick={()=>openEdit("featured",iid)} style={{background:"#1a1a1a",border:"1px solid #222",color:"#C8A96A"}}>✏️</button>
-                    <button className="ib" onClick={()=>dupItem("featured",iid)} style={{color:"#2e2e2e"}}>📋</button>
-                    <button className="ib" onClick={()=>deleteItem("featured",iid)} style={{background:"#1a0d0d",border:"1px solid #ef444422",color:"#ef4444"}}>🗑</button>
+                    <button className="ib" onClick={()=>openEdit("featured",iid)} style={{background:"var(--bg-card-hover)",border:"1px solid var(--border)",color:"var(--text-gold)"}}>✏️</button>
+                    <button className="ib" onClick={()=>dupItem("featured",iid)} style={{color:"var(--text-muted)"}}>📋</button>
+                    <button className="ib" onClick={()=>deleteItem("featured",iid)} style={{background:"var(--bg-dark-red)",border:"1px solid var(--border-red)",color:"var(--text-red)"}}>🗑</button>
                   </div>
                 </div>
               );
@@ -921,22 +921,22 @@ export default function Admin() {
 
         {/* ── HISTORY ── */}
         {tab==="history" && (
-          <div style={{background:"#141414",border:"1px solid #1a1a1a",borderRadius:13,padding:16}}>
+          <div style={{background:"var(--bg-card)",border:"1px solid var(--border-card)",borderRadius:13,padding:16}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:11}}>
-              <h2 style={{fontSize:".85rem",color:"#C8A96A"}}>📋 سجل التعديلات</h2>
-              <button onClick={()=>{setHistory([]);lsSet("admin_history",[]);}} style={{background:"none",border:"1px solid #1a1a1a",borderRadius:7,color:"#2e2e2e",cursor:"pointer",padding:"3px 8px",fontSize:".66rem",fontFamily:"inherit"}}>مسح</button>
+              <h2 style={{fontSize:".85rem",color:"var(--text-gold)"}}>📋 سجل التعديلات</h2>
+              <button onClick={()=>{setHistory([]);lsSet("admin_history",[]);}} style={{background:"none",border:"1px solid var(--border-card)",borderRadius:7,color:"var(--text-muted)",cursor:"pointer",padding:"3px 8px",fontSize:".66rem",fontFamily:"inherit"}}>مسح</button>
             </div>
             {history.length===0
-              ? <p style={{color:"#1e1e1e",fontSize:".76rem",textAlign:"center",padding:"14px 0"}}>لا يوجد سجل</p>
-              : history.map((h,i) => <div key={i} className="hrow"><span>{h.a}</span><span style={{color:"#1e1e1e",flexShrink:0}}>{h.t}</span></div>)
+              ? <p style={{color:"var(--text-muted)",fontSize:".76rem",textAlign:"center",padding:"14px 0"}}>لا يوجد سجل</p>
+              : history.map((h,i) => <div key={i} className="hrow"><span>{h.a}</span><span style={{color:"var(--text-muted)",flexShrink:0}}>{h.t}</span></div>)
             }
           </div>
         )}
 
         {/* ── SETTINGS ── */}
         {tab==="settings" && (
-          <div style={{background:"#141414",border:"1px solid #1a1a1a",borderRadius:13,padding:18}}>
-            <h2 style={{fontSize:".85rem",color:"#C8A96A",marginBottom:14}}>⚙️ إعدادات الموقع</h2>
+          <div style={{background:"var(--bg-card)",border:"1px solid var(--border-card)",borderRadius:13,padding:18}}>
+            <h2 style={{fontSize:".85rem",color:"var(--text-gold)",marginBottom:14}}>⚙️ إعدادات الموقع</h2>
             {[["اسم المطعم",siteName,setSiteName,false],["الشعار",slogan,setSlogan,false],["رقم واتساب",wapp,setWapp,true]].map(([l,v,s,ltr]) => (
               <div key={l} style={{marginBottom:11}}>
                 <span className="sl" style={{marginTop:0}}>{l}</span>
@@ -944,8 +944,8 @@ export default function Admin() {
               </div>
             ))}
             <button className="bp" style={{width:"100%",marginTop:6}} onClick={saveSettings}>💾 حفظ الإعدادات</button>
-            <div style={{marginTop:13,background:"#0f0f0f",border:"1px solid #161616",borderRadius:10,padding:13}}>
-              <p style={{fontSize:".62rem",color:"#1e1e1e",marginBottom:9}}>⚠️ منطقة خطر</p>
+            <div style={{marginTop:13,background:"var(--bg-card-alt)",border:"1px solid var(--border-card)",borderRadius:10,padding:13}}>
+              <p style={{fontSize:".62rem",color:"var(--text-muted)",marginBottom:9}}>⚠️ منطقة خطر</p>
               <button className="bd" style={{width:"100%",padding:"10px"}} onClick={()=>confirm_("حذف كل البيانات؟ لا يمكن التراجع!",async()=>{
                 const hdrs=authHeaders();
                 for(const item of [...menu,...featured]){ await fetch(`/api/pizzas/${item._id||item.id}`,{method:"DELETE",headers:hdrs}).catch(()=>{}); }

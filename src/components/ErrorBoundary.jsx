@@ -20,7 +20,7 @@ export default class ErrorBoundary extends Component {
       const lang = document.documentElement.getAttribute("lang") || "ar";
       return (
         <div dir={lang === "ar" ? "rtl" : "ltr"} style={{
-          fontFamily: "'Noto Kufi Arabic',sans-serif",
+          fontFamily: "var(--ff)",
           background: "var(--bg-page)", minHeight: "100vh",
           display: "flex", flexDirection: "column",
           alignItems: "center", justifyContent: "center",

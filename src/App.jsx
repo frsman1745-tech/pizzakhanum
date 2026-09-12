@@ -431,7 +431,7 @@ export default function PizzaKhanum() {
                 return(
                   <div key={i} className={`slice-cell${isSel?" sel":fid?" fld":""}`} onClick={()=>toggleSlice(i)}>
                     {fid?<><PizzaImg imageUrl={fi?.flavorImageUrl||""} label="" style={{width:"100%",height:28,borderRadius:3}}/><span style={{fontSize:".48rem",color:"var(--text-gold)",fontWeight:700,textAlign:"center",lineHeight:1.2}}>{fi?.label}</span></>
-                       :<><div style={{width:16,height:16,borderRadius:3,border:`1.5px ${isSel?"solid #4DA6FF":"dashed var(--border)"}`,display:"flex",alignItems:"center",justifyContent:"center"}}>{isSel&&<div style={{width:7,height:7,borderRadius:"50%",background:"#4DA6FF"}}/>}</div><span style={{fontSize:".48rem",color:"var(--text-chips)"}}>{i+1}</span></>}
+                       :<><div style={{width:16,height:16,borderRadius:3,border:`1.5px ${isSel?"solid var(--text-gold)":"dashed var(--border)"}`,display:"flex",alignItems:"center",justifyContent:"center"}}>{isSel&&<div style={{width:7,height:7,borderRadius:"50%",background:"var(--text-gold)"}}/>}</div><span style={{fontSize:".48rem",color:"var(--text-chips)"}}>{i+1}</span></>}
                   </div>
                 );
               })}
