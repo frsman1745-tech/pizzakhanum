@@ -40,7 +40,14 @@ export default function DeliveryMap({ onSelect, lang = "ar" }) {
 
   function place(map, lat, lng) {
     if (markerRef.current) { try { markerRef.current.remove(); } catch { } }
-    markerRef.current = window.L.marker([lat, lng], { draggable: true }).addTo(map)
+    const pin = window.L.divIcon({
+      className: "",
+      html: `<div style="width:20px;height:20px;border-radius:50%;background:#C62828;border:3px solid #FFFDF8;box-shadow:0 2px 8px rgba(0,0,0,.45)"></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -14],
+    });
+    markerRef.current = window.L.marker([lat, lng], { draggable: true, icon: pin }).addTo(map)
       .bindPopup(t("location_confirmed", lang)).openPopup();
     markerRef.current.on("dragend", ev => {
       const p = ev.target.getLatLng();
