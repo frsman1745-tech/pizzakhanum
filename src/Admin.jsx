@@ -432,7 +432,7 @@ export default function Admin() {
      ══ LOGIN ══
   ════════════════════════════════════════════════════════════════════════ */
   if (!authed) return (
-    <div style={{minHeight:"100vh",background:"radial-gradient(ellipse at 30% 40%,#1E1815,#151211)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--ff)",direction:"rtl"}}>
+    <div style={{minHeight:"100vh",background:"radial-gradient(ellipse at 30% 40%,#1F1914,#171310)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--ff)",direction:"rtl"}}>
       <style>{CSS}</style>
       <div className="au" style={{background:"var(--bg-card)",border:"1px solid var(--border-gold)",borderRadius:20,padding:"34px 28px",width:"min(340px,95vw)",textAlign:"center"}}>
         <div style={{fontSize:"2.8rem",marginBottom:10}}>🍕</div>
